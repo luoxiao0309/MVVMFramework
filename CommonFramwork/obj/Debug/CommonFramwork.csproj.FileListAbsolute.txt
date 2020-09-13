@@ -1,0 +1,8 @@
+E:\Git仓库\个人项目\个人WPF项目\MVVMFramework\CommonFramwork\bin\Debug\CommonFramwork.dll
+E:\Git仓库\个人项目\个人WPF项目\MVVMFramework\CommonFramwork\bin\Debug\CommonFramwork.pdb
+E:\Git仓库\个人项目\个人WPF项目\MVVMFramework\CommonFramwork\obj\Debug\CommonFramwork.csproj.CoreCompileInputs.cache
+E:\Git仓库\个人项目\个人WPF项目\MVVMFramework\CommonFramwork\obj\Debug\CommonFramwork.dll
+E:\Git仓库\个人项目\个人WPF项目\MVVMFramework\CommonFramwork\obj\Debug\CommonFramwork.pdb
+E:\Git仓库\个人项目\个人WPF项目\MVVMFramework\CommonFramwork\bin\Debug\WindowsBase.dll
+E:\Git仓库\个人项目\个人WPF项目\MVVMFramework\CommonFramwork\obj\Debug\CommonFramwork.csproj.CopyComplete
+E:\Git仓库\个人项目\个人WPF项目\MVVMFramework\CommonFramwork\obj\Debug\CommonFramwork.csprojAssemblyReference.cache

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1209
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVVMFramework", "MVVMFramework\MVVMFramework.csproj", "{F06D72AD-CD32-49BF-A7D0-87C80727B552}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonFramwork", "CommonFramwork\CommonFramwork.csproj", "{9AE11FAA-0B44-4516-A55E-30E803764778}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F06D72AD-CD32-49BF-A7D0-87C80727B552}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F06D72AD-CD32-49BF-A7D0-87C80727B552}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F06D72AD-CD32-49BF-A7D0-87C80727B552}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F06D72AD-CD32-49BF-A7D0-87C80727B552}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AE11FAA-0B44-4516-A55E-30E803764778}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AE11FAA-0B44-4516-A55E-30E803764778}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AE11FAA-0B44-4516-A55E-30E803764778}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AE11FAA-0B44-4516-A55E-30E803764778}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {409DD814-C6FC-4876-A1C0-F1486D425DFC}
+	EndGlobalSection
+EndGlobal

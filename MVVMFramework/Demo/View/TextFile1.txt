@@ -1,0 +1,14 @@
+﻿wpf mvvm开发中，有些情况下，你的view不一定设置DataContext，但是你又想在设计阶段，能够自动提示你的view绑定的viewmodel的内容，这个时候可以通过d:DataContext属性来设置：
+
+d:DataContext="{d:DesignInstance vm:MainViewModel}"
+
+在你的view中加上该代码，则在设计阶段，当你试图去写绑定的时候，就会有代码提示了。这里面显然还有许多东西值得挖掘，至于更深入的内容，用到的时候再研究。
+
+<UserControl x:Class="ViewModels.View.CustomerSettings"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ViewModels.View"
+             xmlns:ViewModel="clr-namespace:ViewModels.ViewModel"
+             mc:Ignorable="d" d:DesignWidth="300" d:DataContext="{d:DesignInstance ViewModel:CustomersVM}">

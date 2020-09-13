@@ -1,0 +1,67 @@
+﻿<Window x:Class="MVVMFramework.View.CommandWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MVVMFramework.View"
+        mc:Ignorable="d"
+        Title="MainWindow"
+        Height="350"
+        Width="525">
+
+    <Window.CommandBindings>
+        <!--Command命令名字应该和CanExecute和Executed里面对应-->
+        <CommandBinding Command="PreviousPage"
+                        CanExecute="CanPreviousPageCommandExecute"
+                        Executed="OnPreviousPageCommandExecute" />
+        <CommandBinding Command="NextPage"
+                        CanExecute="CanNextPageCommandExecute"
+                        Executed="OnNextPageCommandExecute" />
+    </Window.CommandBindings>
+
+    <Window.InputBindings>
+        <KeyBinding Key="Left"
+                    Modifiers="Ctrl"
+                    Command="PreviousPage" />
+        <KeyBinding Key="Right"
+                    Modifiers="Ctrl"
+                    Command="NextPage" />
+
+    </Window.InputBindings>
+    <Grid>
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Top"
+                        Orientation="Horizontal">
+                <Button Width="120"
+                        Height="40"
+                        Content="Previous Tab"
+                        Margin="5"
+                        Command="PreviousPage"></Button>
+                <Button Width="120"
+                        Height="40"
+                        Content="Next Tab"
+                        Margin="5"
+                        Command="NextPage"></Button>
+            </StackPanel>
+            
+            <TabControl Name="tabControl">
+                <TabItem Header="Page 1">
+
+                </TabItem>
+                
+                <TabItem Header="Page 2">
+
+                </TabItem>
+
+            </TabControl>
+        </DockPanel>
+
+        <StackPanel>
+
+            <Button Content="新增用户" Height="40" Margin="20" Command="{Binding AddName}"/>
+
+            <Button Content="更新选中用户" Height="40" Margin="20" Command="{Binding UpdateName}" CommandParameter="{Binding ElementName=lv,Path=SelectedItem}"/>
+
+        </StackPanel>
+    </Grid>
+</Window>
