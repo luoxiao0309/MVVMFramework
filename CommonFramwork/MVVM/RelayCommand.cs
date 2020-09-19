@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace CommonFramwork.MVVM
+namespace CommonFramework.MVVM
 {
     public class RelayCommand : ICommand
     {

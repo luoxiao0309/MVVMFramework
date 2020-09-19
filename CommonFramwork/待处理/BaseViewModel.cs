@@ -1,12 +1,12 @@
-﻿using CommonFramwork.Extensions;
-using CommonFramwork.Helper;
+﻿using CommonFramework.Extensions;
+using CommonFramework.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reactive.Disposables;
 
-namespace CommonFramwork.待处理
+namespace CommonFramework.待处理
 {
     public abstract class BaseViewModel : INotifyPropertyChanged
     {

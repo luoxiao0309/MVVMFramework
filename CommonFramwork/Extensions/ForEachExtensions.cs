@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CommonFramwork.Extensions
+namespace CommonFramework.Extensions
 {
     public static class ForEachExtensions
     {

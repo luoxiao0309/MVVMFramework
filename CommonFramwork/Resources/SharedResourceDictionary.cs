@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace CommonFramwork.Resources
+namespace CommonFramework.Resources
 {
     // The shared resource dictionary is a specialized resource dictionary
     // that loads it content only once. If a second instance with the same source

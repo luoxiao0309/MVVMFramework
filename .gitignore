@@ -1,1 +1,5 @@
 /.vs
+/CommonFramwork/bin
+/MVVMFramework/bin
+/MVVMFramework/obj
+/CommonFramwork/obj

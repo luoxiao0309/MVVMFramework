@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
-using CommonFramwork.MVVM;
+using CommonFramework.MVVM;
 using MVVMFramework.Model;
 
 namespace MVVMFramework.ViewModel

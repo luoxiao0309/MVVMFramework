@@ -1,4 +1,5 @@
-﻿using CommonFramwork;
+﻿using CommonFramework;
+using CommonFramework.MVVM;
 using MVVMFramework.Model;
 using System;
 using System.Collections.Generic;

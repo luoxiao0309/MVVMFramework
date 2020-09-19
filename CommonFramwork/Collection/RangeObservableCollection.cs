@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace CommonFramwork.Collection
+namespace CommonFramework.Collection
 {
     public sealed class RangeObservableCollection<T> : ObservableCollection<T>
     {

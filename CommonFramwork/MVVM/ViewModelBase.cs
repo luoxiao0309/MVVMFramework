@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CommonFramwork.MVVM
+namespace CommonFramework.MVVM
 {
     public class ViewModelBase : INotifyPropertyChanged
     {
@@ -66,7 +66,7 @@ namespace CommonFramwork.MVVM
             }
         }
 
-        protected virtual bool SetProperty<T>(ref T field, T value, String propName)
+        protected virtual bool SetProperty<T>(ref T field, T value, [CallerMemberName] String propName=null)
         {
             if (EqualityComparer<T>.Default.Equals(field, value))
             {

@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CommonFramwork.Helper
+namespace CommonFramework.Helper
 {
     public static class ExpressionHelper
     {

@@ -4,13 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Markup;
 
-namespace CommonFramwork.MVVM
+namespace CommonFramework.MVVM
 {
     public class RelayCommandType<T> : ICommand
     {
         private readonly Predicate<T> _canExecute;
         private readonly Action<T> _execute;
+
+        public RelayCommandType(Action<T> execute) : this(null, execute)
+        {
+
+        }
 
         public RelayCommandType(Predicate<T> canExecute, Action<T> execute)
         {

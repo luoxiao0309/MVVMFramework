@@ -75,6 +75,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Demo\View\EventBindingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Demo\View\InvokeCommandWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Demo\View\PageHome.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -86,10 +94,6 @@
     <Page Include="Demo\View\PropertyChangeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -103,6 +107,8 @@
     <Compile Include="Demo\Model\SachDAL.cs" />
     <Compile Include="Demo\Model\SachModel.cs" />
     <Compile Include="Demo\Model\User.cs" />
+    <Compile Include="Demo\ViewModel\EventBindingViewModel.cs" />
+    <Compile Include="Demo\ViewModel\InvokeCommandViewModel.cs" />
     <Compile Include="Demo\ViewModel\LoginViewModel.cs" />
     <Compile Include="Demo\ViewModel\ProdutosViewModel.cs" />
     <Compile Include="Demo\ViewModel\SachViewModel.cs" />
@@ -124,6 +130,12 @@
     <Compile Include="Demo\View\Depend\ProdutoControle.xaml.cs">
       <DependentUpon>ProdutoControle.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Demo\View\EventBindingWindow.xaml.cs">
+      <DependentUpon>EventBindingWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Demo\View\InvokeCommandWindow.xaml.cs">
+      <DependentUpon>InvokeCommandWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Demo\View\PageHome.xaml.cs">
       <DependentUpon>PageHome.xaml</DependentUpon>
     </Compile>
@@ -132,10 +144,6 @@
     </Compile>
     <Compile Include="Demo\View\PropertyChangeWindow.xaml.cs">
       <DependentUpon>PropertyChangeWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -165,9 +173,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CommonFramwork\CommonFramwork.csproj">
+    <ProjectReference Include="..\CommonFramwork\CommonFramework.csproj">
       <Project>{9ae11faa-0b44-4516-a55e-30e803764778}</Project>
-      <Name>CommonFramwork</Name>
+      <Name>CommonFramework</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

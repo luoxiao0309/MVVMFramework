@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="NodeSample.ConstantNode"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NodeSample"
+             mc:Ignorable="d" Height="75" Width="300" d:DesignWidth="300">
+    <Border BorderThickness="1" Background="#FF2F2F2F" CornerRadius="3">
+        <Border.Effect>
+            <DropShadowEffect Direction="0" ShadowDepth="0" BlurRadius="20" RenderingBias="Quality" Opacity="0.15"/>
+        </Border.Effect>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="6"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="1" Name="stack_input" Grid.Column="0" MaxWidth="12" Margin="-6,0,0,0" HorizontalAlignment="Left"></StackPanel>
+            <StackPanel Grid.Row="1" Name="stack_output" Grid.Column="2" MaxWidth="12" Margin="0,0,-6,0" HorizontalAlignment="Right">
+            </StackPanel>
+            <Grid Name="grid_content" Row="1" Grid.Column="1">
+                <Label Content="Value" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Foreground="#FF0BFF85" Width="60"/>
+                <TextBox Name="tb_output" TextChanged="Tb_output_OnTextChanged" Height="26" Margin="70,10,10,0" TextWrapping="Wrap" Text="20" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" VerticalContentAlignment="Center"/>
+            </Grid>
+
+            <Border Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0">
+                <Grid Name="grid_controlbar">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                        <TextBlock Margin="5" Name="tb_title" Text="Constant" Foreground="#FFE9E9E9" VerticalAlignment="Bottom"/>
+                        <TextBlock Margin="5" Text="Startpoint" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#FF3F3F3F"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Grid.Column="1" Height="26">
+                        <Button Name="btn_delete" Content="X" Width="26" Foreground="#FFFF5A5A" BorderBrush="{x:Null}" Background="{x:Null}" Click="Btn_delete_Click"/>
+                    </StackPanel>
+
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>

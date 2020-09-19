@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace CommonFramwork.MVVM
+namespace CommonFramework.MVVM
 {
     /// <summary>
     /// 继承MarkupExtension 可以直接向XAML直接提供服务

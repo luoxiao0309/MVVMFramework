@@ -1,0 +1,26 @@
+﻿<Window x:Class="MVVMFramework.Demo.View.EventBindingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MVVMFramework.Demo.View"
+        xmlns:eb="clr-namespace:CommonFramework.Event;assembly=CommonFramwork"
+        mc:Ignorable="d"
+        Title="EventBindingWindow" Height="450" Width="800">
+    <Grid SizeChanged="{eb:EventBinding CommandParameter=$e}">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel >
+            <TextBlock Text="{Binding CurrentWidth, StringFormat=CurrentWidth : {0}}"/>
+            <TextBlock Text="{Binding CurrentHeight, StringFormat=CurrentHeight : {0}}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Rectangle Fill="OrangeRed" Width="50" Height="50" MouseDown="{eb:EventBinding}"/>
+            <Rectangle Fill="LimeGreen" Width="50" Height="50" MouseDown="{eb:EventBinding CommandParameter=green}"/>
+            <Rectangle Fill="DeepSkyBlue" Width="50" Height="50" MouseDown="{eb:EventBinding Command=MouseDownCommand, CommandParameter=blue}"/>
+            <Rectangle Fill="Yellow" Width="50" Height="50" MouseDown="{eb:EventBinding Command=MouseDownCommand, CommandParameter=$this.Fill}"/>
+        </StackPanel>
+    </Grid>
+</Window>
