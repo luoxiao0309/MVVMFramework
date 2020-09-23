@@ -328,7 +328,6 @@ namespace NodeControl
 
         private void NodeGraph_Move(object sender, MouseEventArgs e)
         {
-            //Console.WriteLine("NodeGraph_Move..........");
             if (moveCamera)
             {
                 Point current = e.GetPosition(this);
@@ -357,14 +356,14 @@ namespace NodeControl
                 Rect actualRangeRect = new Rect(origMouseDownPoint, current);
                 foreach (var item in getNodes())
                 {
-                    //if (actualRangeRect.IsInclude(item.node.Element.GetBoundingBox()))
-                    //{
-                    //    item.Selected = true;
-                    //}
-                    //else if (actualRangeRect.IntersectsWith(item.node.Element.GetBoundingBox()))
-                    //{
-                    //    item.Selected = true;
-                    //}
+                    if (actualRangeRect.IsInclude(item.node.Element.GetBoundingBox()))
+                    {
+                        item.Selected = true;
+                    }
+                    else if (actualRangeRect.IntersectsWith(item.node.Element.GetBoundingBox()))
+                    {
+                        item.Selected = true;
+                    }
 
                     if (item.Selected)
                     {

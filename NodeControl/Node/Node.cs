@@ -144,26 +144,20 @@ namespace NodeControl
                     if (graph.SelectNodes.Count>0)
                     {
                         Point current = args.GetPosition(graph.canvas);
-                        Point Deleta = new Point(current.X-dragStart.Value.X,current.Y-dragStart.Value.Y);
-                        //Console.WriteLine("Deleta: "+Deleta);
-
+                        
                         foreach (var item in graph.SelectNodes)
                         {
+                            Point Deleta = new Point(current.X - dragStart.Value.X, current.Y - dragStart.Value.Y);
                             //移动线
-                            //item.Position = new Point(Deleta.X+item.dragStart.Value.X, Deleta.Y + item.dragStart.Value.Y);
-                            item.SetPosition(new Point(Deleta.X + item.dragStart.Value.X, Deleta.Y + item.dragStart.Value.Y));
+                            item.Position = Deleta;
                         }
                     }
                     else
                     {
                         UIElement element = (UIElement)sender;
-                        //Point p2 = args.GetPosition(graph.canvas);
-                        //Position = new Point(p2.X - dragStart.Value.X, p2.Y - dragStart.Value.Y);
-                        //isAboutToBeRemoved = !isPointWithin(p2);
-
-                        Point current = args.GetPosition(graph.canvas);
-                        Point Deleta = new Point(current.X - dragStart.Value.X, current.Y - dragStart.Value.Y);
-                        Position = new Point(Deleta.X + dragStart.Value.X, Deleta.Y + dragStart.Value.Y);
+                        Point p2 = args.GetPosition(graph.canvas);
+                        Position = new Point(p2.X - dragStart.Value.X, p2.Y - dragStart.Value.Y);
+                        isAboutToBeRemoved = !isPointWithin(p2);
                     }
                 }
             }
@@ -204,25 +198,23 @@ namespace NodeControl
         {
             var element = (UIElement)sender;
 
-            //if (graph.SelectNodes.Count > 0)
-            //{
-            //    dragStart = args.GetPosition(element);
-            //    foreach (var item in graph.SelectNodes)
-            //    {
-            //        if (item!=this)
-            //        {
-            //            item.dragStart = item.Position;
-            //        }
-            //    }
-            //}
-            //else
-            //{
-                
-            //}
-
-            dragStart = args.GetPosition(element);
-            element.CaptureMouse();
-            Selected = true;
+            if (graph.SelectNodes.Count > 0)
+            {
+                dragStart = args.GetPosition(element);
+                foreach (var item in graph.SelectNodes)
+                {
+                    if (item != this)
+                    {
+                        item.dragStart = item.Position;
+                    }
+                }
+            }
+            else
+            {
+                dragStart = args.GetPosition(element);
+                element.CaptureMouse();
+                Selected = true;
+            }
 
             args.Handled = false;
             Console.WriteLine("Node  MouseDown");
