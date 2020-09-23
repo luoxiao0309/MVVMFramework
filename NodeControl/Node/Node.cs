@@ -55,6 +55,10 @@ namespace NodeControl
 
         //public bool isTemplate => chest != null;
         public bool isTemplate = false;
+        /// <summary>
+        /// 起始位置
+        /// </summary>
+        public Point BeginPosition;
 
         public Node(INode visual)
         {
@@ -140,24 +144,25 @@ namespace NodeControl
             {
                 if (dragStart != null && args.LeftButton == MouseButtonState.Pressed)
                 {
-                    Console.WriteLine("Deleta---1: " + Mouse.GetPosition(graph.canvas));
                     if (graph.SelectNodes.Count>0)
                     {
                         Point current = args.GetPosition(graph.canvas);
                         
                         foreach (var item in graph.SelectNodes)
                         {
-                            Point Deleta = new Point(current.X - dragStart.Value.X, current.Y - dragStart.Value.Y);
+                            Point Deleta = new Point(current.X - item.dragStart.Value.X, current.Y - item.dragStart.Value.Y);
                             //移动线
-                            item.Position = Deleta;
+                            item.Position = new Point(item.BeginPosition.X+Deleta.X, item.BeginPosition.Y + Deleta.Y);
                         }
                     }
                     else
                     {
+                        Console.WriteLine("移动节点");
                         UIElement element = (UIElement)sender;
                         Point p2 = args.GetPosition(graph.canvas);
                         Position = new Point(p2.X - dragStart.Value.X, p2.Y - dragStart.Value.Y);
                         isAboutToBeRemoved = !isPointWithin(p2);
+                        graph.Stop = true; 
                     }
                 }
             }
@@ -184,6 +189,8 @@ namespace NodeControl
             if (isAboutToBeRemoved)
                 graph.removeNode(this);
 
+            graph.Stop = false;
+
             if (graph.SelectNodes.Count > 0)
             {
                 foreach (var item in graph.SelectNodes)
@@ -200,24 +207,22 @@ namespace NodeControl
 
             if (graph.SelectNodes.Count > 0)
             {
-                dragStart = args.GetPosition(element);
                 foreach (var item in graph.SelectNodes)
                 {
-                    if (item != this)
-                    {
-                        item.dragStart = item.Position;
-                    }
+                    item.dragStart = args.GetPosition(graph.canvas);
+                    item.BeginPosition = item.Position;
                 }
+                element.CaptureMouse();
             }
             else
             {
+                BeginPosition = Position;
                 dragStart = args.GetPosition(element);
                 element.CaptureMouse();
                 Selected = true;
             }
 
-            args.Handled = false;
-            Console.WriteLine("Node  MouseDown");
+            graph.Stop = true;
         }
 
         private bool _isAboutToBeRemoved = false;
