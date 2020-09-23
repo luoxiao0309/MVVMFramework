@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -70,10 +72,13 @@
     <Compile Include="Extensions\ForEachExtensions.cs" />
     <Compile Include="Extensions\NotifyPropertyChangedExtensions.cs" />
     <Compile Include="Extensions\UIElementExtension.cs" />
+    <Compile Include="Extensions\VisualTreeHelperExtensions.cs" />
     <Compile Include="Helper\ExpressionHelper.cs" />
+    <Compile Include="Helper\Helper.cs" />
     <Compile Include="MVVM\BaseValueConverter.cs" />
     <Compile Include="Collection\RangeObservableCollection.cs" />
     <Compile Include="MVVM\WeakEventHandlerManager.cs" />
+    <Compile Include="Resources\ResourceInstance.cs" />
     <Compile Include="Resources\SharedResourceDictionary.cs" />
     <Compile Include="Util\DependencyObjectUtil.cs" />
     <Compile Include="MVVM\RelayCommand.cs" />

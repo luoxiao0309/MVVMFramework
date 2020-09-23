@@ -52,6 +52,7 @@
     <Compile Include="Connect\Connector.cs" />
     <Compile Include="Connect\ConnectorType.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="IWindow.cs" />
     <Compile Include="Node\INode.cs" />
     <Compile Include="Node\INodeProperty.cs" />
     <Compile Include="Connect\InputConnector.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="NodeGraphContext.cs" />
     <Compile Include="NodeGraphOrientation.cs" />
     <Compile Include="Connect\OutputConnector.cs" />
+    <Compile Include="SelectArea\RectSelection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

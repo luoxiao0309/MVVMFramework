@@ -28,7 +28,6 @@ namespace NodeControl
         Type UICopyClass { get; }
 
         int Pause { get; set; }
-
         event MouseButtonEventHandler NodePreviewMouseLeftButtonDown;
         event MouseButtonEventHandler NodeMouseDown;
         event MouseEventHandler NodeMouseMove;
@@ -51,5 +50,6 @@ namespace NodeControl
 
         void SetConnection();
 
+        void SetSelected(bool selected);
     }
 }

@@ -6,10 +6,22 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NodeControl"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <ScrollViewer x:Name="scroll_viewer" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
-        <Canvas x:Name="canvas" x:FieldModifier="public" ClipToBounds="True"  Height="3000" Width="3000">
+             d:DesignHeight="450" d:DesignWidth="500">
+
+    <!--<ScrollViewer x:Name="scroll_viewer" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible">
+        <Canvas x:Name="canvas" x:FieldModifier="public" ClipToBounds="True"  Height="3000" Width="3000" Background="Black">
 
         </Canvas>
-    </ScrollViewer>
+    </ScrollViewer>-->
+    <Border.ContextMenu>
+        <ContextMenu>
+            <MenuItem InputGestureText="Ctrl + =" Header="Add Node">
+                <MenuItem Header="ConstantNode" Click="AddNode"/>
+                <MenuItem Header="DisplayNode" Click="AddNode"/>
+            </MenuItem>
+        </ContextMenu>
+    </Border.ContextMenu>
+    <Canvas x:Name="canvas" x:FieldModifier="public" ClipToBounds="True"  Height="3000" Width="3000" Background="Black">
+        
+    </Canvas>
 </Border>

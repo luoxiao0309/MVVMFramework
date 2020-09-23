@@ -27,7 +27,7 @@ namespace NodeControl
 
             if (Connection.Current == null)
             {
-                new Connection(this, null);
+                Connection.Current = new Connection(this, null);
                 return;
             }
 

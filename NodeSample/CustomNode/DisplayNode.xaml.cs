@@ -58,6 +58,18 @@ namespace NodeSample
         /// </summary>
         public event ParentChanged NodeParentChanged;
 
+        public bool IsSelected
+        {
+            get => (bool)GetValue(IsSelectedProperty);
+            set => SetValue(IsSelectedProperty, value);
+        }
+
+        public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(
+            nameof(IsSelected),
+            typeof(bool),
+            typeof(DisplayNode),
+            new PropertyMetadata(false));
+
         /// <summary>
         /// Creates a default instance of the this
         /// </summary>
@@ -102,7 +114,7 @@ namespace NodeSample
             InitializeComponent();
             Properties = new Dictionary<string, object>();
             CurrentNode = new Node(this);
-
+            
             Inputs = stack_input;
             Outputs = stack_output;
 
@@ -168,6 +180,19 @@ namespace NodeSample
         private void Btn_delete_Click(object sender, RoutedEventArgs e)
         {
             CurrentNode.graph.removeNode(this.CurrentNode);
+        }
+        
+        public void SetSelected(bool selected)
+        {
+            IsSelected = selected;
+            if (selected)
+            {
+                this.Background = Brushes.Aqua;
+            }
+            else
+            {
+                this.Background = Brushes.Transparent;
+            }
         }
     }
 }

@@ -20,7 +20,7 @@ namespace NodeSample
     /// <summary>
     /// Interaktionslogik für MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window,IWindow
     {
         private NodeGraph graph;
         //private NodeChest nodeChest;
@@ -31,7 +31,7 @@ namespace NodeSample
             InitializeComponent();
 
             context = new NodeGraphContext();
-            graph = new NodeGraph(context);
+            graph = new NodeGraph(context,this);
             graph.pipeStiffness = 0;
             container.Children.Add(graph);
 
@@ -73,6 +73,22 @@ namespace NodeSample
         private void BtnRun_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        void IWindow.AddNode(string name,Point position)
+        {
+            if (name== "ConstantNode")
+            {
+                ConstantNode node = new ConstantNode();
+                node.CurrentNode.Position = position;
+                graph.addNode(node.CurrentNode);
+            }
+            else if (name == "DisplayNode")
+            {
+                DisplayNode node = new DisplayNode();
+                node.CurrentNode.Position = position;
+                graph.addNode(node.CurrentNode);
+            }
         }
     }
 }

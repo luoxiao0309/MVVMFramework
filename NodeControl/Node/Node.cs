@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommonFramework.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -36,6 +37,21 @@ namespace NodeControl
         public InputConnector[] getInputs() => Application.Current.Dispatcher.Invoke(() => node.Inputs.Children.OfType<InputConnector>().ToArray());
         public OutputConnector[] getOutputs() => Application.Current.Dispatcher.Invoke(() => node.Outputs.Children.OfType<OutputConnector>().ToArray());
 
+        private bool _selected = false;
+        /// <summary>
+        /// 是否选中
+        /// </summary>
+        public bool Selected {
+            get
+            {
+                return _selected;
+            }
+            set
+            {
+                _selected = value;
+                node.SetSelected(_selected);
+            }
+        }
 
         //public bool isTemplate => chest != null;
         public bool isTemplate = false;
@@ -124,12 +140,38 @@ namespace NodeControl
             {
                 if (dragStart != null && args.LeftButton == MouseButtonState.Pressed)
                 {
-                    UIElement element = (UIElement)sender;
-                    Point p2 = args.GetPosition(graph.canvas);
-                    Position = new Point(p2.X - dragStart.Value.X, p2.Y - dragStart.Value.Y);
-                    isAboutToBeRemoved = !isPointWithin(p2);
+                    Console.WriteLine("Deleta---1: " + Mouse.GetPosition(graph.canvas));
+                    if (graph.SelectNodes.Count>0)
+                    {
+                        Point current = args.GetPosition(graph.canvas);
+                        Point Deleta = new Point(current.X-dragStart.Value.X,current.Y-dragStart.Value.Y);
+                        //Console.WriteLine("Deleta: "+Deleta);
+
+                        foreach (var item in graph.SelectNodes)
+                        {
+                            //移动线
+                            //item.Position = new Point(Deleta.X+item.dragStart.Value.X, Deleta.Y + item.dragStart.Value.Y);
+                            item.SetPosition(new Point(Deleta.X + item.dragStart.Value.X, Deleta.Y + item.dragStart.Value.Y));
+                        }
+                    }
+                    else
+                    {
+                        UIElement element = (UIElement)sender;
+                        //Point p2 = args.GetPosition(graph.canvas);
+                        //Position = new Point(p2.X - dragStart.Value.X, p2.Y - dragStart.Value.Y);
+                        //isAboutToBeRemoved = !isPointWithin(p2);
+
+                        Point current = args.GetPosition(graph.canvas);
+                        Point Deleta = new Point(current.X - dragStart.Value.X, current.Y - dragStart.Value.Y);
+                        Position = new Point(Deleta.X + dragStart.Value.X, Deleta.Y + dragStart.Value.Y);
+                    }
                 }
             }
+        }
+
+        public void MoveNode(UIElement element)
+        {
+
         }
 
         private bool isPointWithin(Point point)
@@ -144,15 +186,46 @@ namespace NodeControl
             var element = (UIElement)sender;
             dragStart = null;
             element.ReleaseMouseCapture();
+            Selected = false;
             if (isAboutToBeRemoved)
                 graph.removeNode(this);
+
+            if (graph.SelectNodes.Count > 0)
+            {
+                foreach (var item in graph.SelectNodes)
+                {
+                    item.Selected = false;
+                }
+                graph.SelectNodes.Clear();
+            }
         }
 
         private void mouseDown(object sender, MouseEventArgs args)
         {
             var element = (UIElement)sender;
+
+            //if (graph.SelectNodes.Count > 0)
+            //{
+            //    dragStart = args.GetPosition(element);
+            //    foreach (var item in graph.SelectNodes)
+            //    {
+            //        if (item!=this)
+            //        {
+            //            item.dragStart = item.Position;
+            //        }
+            //    }
+            //}
+            //else
+            //{
+                
+            //}
+
             dragStart = args.GetPosition(element);
             element.CaptureMouse();
+            Selected = true;
+
+            args.Handled = false;
+            Console.WriteLine("Node  MouseDown");
         }
 
         private bool _isAboutToBeRemoved = false;
@@ -188,6 +261,12 @@ namespace NodeControl
 
                 moved?.Invoke(this);
             }
+        }
+
+        public void SetPosition(Point point)
+        {
+            Canvas.SetLeft(node.Element, point.X);
+            Canvas.SetTop(node.Element, point.Y);
         }
 
         public Connector addInput(int type)
@@ -307,5 +386,10 @@ namespace NodeControl
                 }
             }
         }
+
+        //public Rect GetBoundingBox()
+        //{
+        //    return new Rect(Position.X, Position.Y, ActualWidth, ActualHeight);
+        //}
     }
 }

@@ -17,7 +17,7 @@ namespace NodeControl
         public readonly PathFigure PathFigure;
         public readonly BezierSegment Bezier;
         public readonly Path Path;
-
+        int count = 1;
         public NodeGraph Graph => (InputConnector != null) ? InputConnector.node.graph : OutputConnector.node.graph;
 
         public object Result = null;
@@ -115,7 +115,8 @@ namespace NodeControl
             Path.Data = pathGeometry;
 
             Graph.canvas.Children.Add(Path);
-            ((UIElement)Graph.canvas.Parent).MouseMove += Canvas_MouseMove;
+            //((UIElement)Graph.canvas.Parent).MouseMove += Canvas_MouseMove;
+            ((UIElement)Graph.canvas).MouseMove += Canvas_MouseMove;
         }
 
         private void SetAnchorPointB(Point point)
@@ -170,9 +171,10 @@ namespace NodeControl
 
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {
-            Console.WriteLine("Connection Canvas_MouseMove");
             if (Current == null)
-                ((UIElement)Graph.canvas.Parent).MouseMove -= Canvas_MouseMove;
+            {
+                ((UIElement)Graph.canvas).MouseMove -= Canvas_MouseMove;
+            }
 
             if (OutputConnector == null)
             {

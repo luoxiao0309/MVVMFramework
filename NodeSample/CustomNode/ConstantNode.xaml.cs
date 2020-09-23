@@ -57,14 +57,25 @@ namespace NodeSample
         /// Override OnVisualParentChanged and invoke -> to NodeParentChanged
         /// </summary>
         public event ParentChanged NodeParentChanged;
+        
+        public bool IsSelected
+        {
+            get => (bool)GetValue(IsSelectedProperty);
+            set => SetValue(IsSelectedProperty, value);
+        }
 
+        public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(
+            nameof(IsSelected),
+            typeof(bool),
+            typeof(ConstantNode),
+            new PropertyMetadata(false));
+        
         /// <summary>
         /// Creates a default instance of the this
         /// </summary>
         /// <returns>UIElement default Instance</returns>
         public UIElement CreateDefaultNode()
         {
-            Console.WriteLine("CreateDefaultNode....");
             return null;
             //return new SimpleNode();
         }
@@ -176,6 +187,19 @@ namespace NodeSample
         private void Tb_output_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             Properties["value"] = tb_output.Text;
+        }
+
+        public void SetSelected(bool selected)
+        {
+            IsSelected = selected;
+            if (selected)
+            {
+                this.Background = Brushes.Aqua;
+            }
+            else
+            {
+                this.Background = Brushes.Transparent;
+            }
         }
     }
 }

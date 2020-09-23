@@ -28,7 +28,18 @@ namespace NodeControl
         private INode LastDropItemNode = null;
 
         private bool moveCamera = false;
+        private bool CtrlPress = false;
+        public RectSelection rectSelection;
+
+        public List<Node> SelectNodes = new List<Node>();
         //private INodeRepresentation LastDropItemNodeRepresenation = null;
+
+        public IWindow window;
+
+        /// <summary>
+        /// 选中节点
+        /// </summary>
+        private bool SelectedNode = false;
 
         /// <summary>
         /// 管道刚度
@@ -47,56 +58,24 @@ namespace NodeControl
             }
         }
 
-        public NodeGraph(NodeGraphContext context)
+        public NodeGraph(NodeGraphContext context,IWindow window)
         {
             InitializeComponent();
+            this.window = window;
 
             context.propertyChanged += Context_propertyChanged;
             this.context = context;
 
+            
             this.MouseDown += NodeGraph_MouseDown;
             this.DragEnter += Canvas_DragEnter;     //没用    
             this.Drop += NodeGraph_Drop;            //没用
 
             this.MouseMove += NodeGraph_Move;
             this.MouseUp += NodeGraph_MouseUp;
+            this.MouseLeave += NodeGraph_MouseLeave;
             this.AllowDrop = true;
-            this.PreviewKeyDown += OnPreviewKeyDown;
-        }
-
-        private void NodeGraph_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            moveCamera = false;
-        }
-
-        private void NodeGraph_Move(object sender, MouseEventArgs e)
-        {
-            if (moveCamera)
-            {
-                var current = e.GetPosition(this);
-                Vector Deleta = current - origMouseDownPoint;
-                origMouseDownPoint = current;
-
-                foreach (var item in getNodes())
-                {
-                    item.node.Element.MoveElement(Deleta);
-                    //移动线
-                    item.Position = item.node.Element.GetUIElementPosition();
-                }
-            }
-        }
-
-        private void OnPreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            Console.WriteLine("OnPreviewKeyDown...");
-            if (e.Key == Key.Escape)
-            {
-                if (Connection.Current != null)
-                {
-                    Connection.Current.Dispose();
-                    Connection.Current = null;
-                }
-            }
+            rectSelection = new RectSelection(this);
         }
 
         private void Context_propertyChanged(string propertyName)
@@ -161,25 +140,6 @@ namespace NodeControl
             }
         }
 
-        /// <summary>
-        /// 只接受鼠标右键
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void NodeGraph_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (Connection.Current != null)
-            {
-                Connection.Current.Dispose();
-                Connection.Current = null;
-            }
-
-            if (e.ChangedButton==MouseButton.Middle)
-            {
-                moveCamera = true;
-                origMouseDownPoint = e.GetPosition(this);
-            }
-        }
 
         public T addNode<T>(T node) where T : Node
         {
@@ -305,6 +265,128 @@ namespace NodeControl
                 }));
                 thread.Start();
             }
+        }
+
+        #region 事件
+        
+        /// <summary>
+        /// 只接受鼠标右键
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void NodeGraph_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Middle)
+            {
+                moveCamera = true;
+                origMouseDownPoint = e.GetPosition(this);
+            }
+            else if (e.ChangedButton == MouseButton.Left)
+            {
+                foreach (var item in getNodes())
+                {
+                    if (item.Selected)
+                    {
+                        SelectedNode = true;
+                        break;
+                    }
+                }
+
+                Console.WriteLine("NodeGraph_MouseDown SelectedNode:"+ SelectedNode);
+                if (SelectedNode == false)
+                {
+                    origMouseDownPoint = e.GetPosition(this);
+                    rectSelection.OnStartDrag(origMouseDownPoint);
+                }
+            }
+            else if (e.ChangedButton == MouseButton.Right)
+            {
+                if (Connection.Current != null)
+                {
+                    Connection.Current.Dispose();
+                    Connection.Current = null;
+
+                    ContextMenu.Visibility = Visibility.Hidden;
+                }
+                else
+                {
+                    ContextMenu.Visibility = Visibility.Visible;
+                }
+            }
+        }
+        
+        private void NodeGraph_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            moveCamera = false;
+
+            if (SelectedNode == false)
+            {
+                rectSelection.OnDragEnd();
+            }
+            SelectedNode = false;
+        }
+
+        private void NodeGraph_Move(object sender, MouseEventArgs e)
+        {
+            //Console.WriteLine("NodeGraph_Move..........");
+            if (moveCamera)
+            {
+                Point current = e.GetPosition(this);
+                Vector Deleta = current - origMouseDownPoint;
+                origMouseDownPoint = current;
+
+                foreach (var item in getNodes())
+                {
+                    item.node.Element.MoveElement(Deleta);
+                    //移动线
+                    item.Position = item.node.Element.GetUIElementPosition();
+                }
+            }
+
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                Console.WriteLine("NodeGraph_Move SelectedNode:" + SelectedNode);
+            }
+            
+            if (e.LeftButton == MouseButtonState.Pressed && SelectedNode == false)
+            {
+                var current = e.GetPosition(this);
+                Vector Deleta = current - origMouseDownPoint;
+                rectSelection.OnDragMoving(Deleta, MouseButton.Left, current, origMouseDownPoint);
+
+                Rect actualRangeRect = new Rect(origMouseDownPoint, current);
+                foreach (var item in getNodes())
+                {
+                    //if (actualRangeRect.IsInclude(item.node.Element.GetBoundingBox()))
+                    //{
+                    //    item.Selected = true;
+                    //}
+                    //else if (actualRangeRect.IntersectsWith(item.node.Element.GetBoundingBox()))
+                    //{
+                    //    item.Selected = true;
+                    //}
+
+                    if (item.Selected)
+                    {
+                        SelectNodes.Add(item);
+                    }
+                }
+            }
+        }
+
+        private void NodeGraph_MouseLeave(object sender, MouseEventArgs e)
+        {
+            moveCamera = false;
+            rectSelection.OnDragEnd();
+        }
+        #endregion
+
+        private void AddNode(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            //Point position = Mouse.GetPosition(e.Source as FrameworkElement);//WPF方法
+            Point position = Mouse.GetPosition(canvas);
+            window.AddNode(menuItem.Header.ToString(), position);
         }
     }
 }

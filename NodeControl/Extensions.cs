@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Navigation;
@@ -71,5 +72,15 @@ namespace NodeControl
             }
         }
 
+        public static bool IsInclude(this Rect me, Rect target)
+        {
+            return me.Left <= target.Left && target.Right <= me.Right && me.Top <= target.Top && target.Bottom <= me.Bottom;
+        }
+
+        public static Rect GetBoundingBox(this UIElement element)
+        {
+            FrameworkElement frameworkElement = element as FrameworkElement;
+            return new Rect(Canvas.GetLeft(element), Canvas.GetTop(element), frameworkElement.ActualWidth, frameworkElement.ActualHeight);
+        }
     }
 }

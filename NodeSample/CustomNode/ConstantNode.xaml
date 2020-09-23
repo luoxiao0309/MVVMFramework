@@ -6,6 +6,23 @@
              xmlns:local="clr-namespace:NodeSample"
              mc:Ignorable="d" Height="75" Width="300" d:DesignWidth="300">
     <Border BorderThickness="1" Background="#FF2F2F2F" CornerRadius="3">
+        <Border.Style>
+            <Style TargetType="{x:Type Border}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsSelected,RelativeSource={RelativeSource Self}}" Value="True">
+                        <Setter Property="BorderBrush" Value="Aqua"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
+
+        <Border.ContextMenu>
+            <ContextMenu>
+                <MenuItem InputGestureText="Ctrl + =" Header="Delete Node" Click="Btn_delete_Click">
+                </MenuItem>
+            </ContextMenu>
+        </Border.ContextMenu>
+        
         <Border.Effect>
             <DropShadowEffect Direction="0" ShadowDepth="0" BlurRadius="20" RenderingBias="Quality" Opacity="0.15"/>
         </Border.Effect>

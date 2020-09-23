@@ -55,6 +55,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Demo\View\CanvasWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Demo\View\Command\Command.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -115,6 +119,9 @@
     <Compile Include="Demo\ViewModel\PropertyViewModel.cs" />
     <Compile Include="Demo\ViewModel\ViewModelPropertyChangedEventManger.cs" />
     <Compile Include="Demo\ViewModel\ViewModel_Main.cs" />
+    <Compile Include="Demo\View\CanvasWindow.xaml.cs">
+      <DependentUpon>CanvasWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Demo\View\Command\Command.xaml.cs">
       <DependentUpon>Command.xaml</DependentUpon>
     </Compile>

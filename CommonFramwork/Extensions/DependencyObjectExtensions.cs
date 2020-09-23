@@ -10,6 +10,11 @@ namespace CommonFramework.Extensions
 {
     public static class DependencyObjectExtensions
     {
+        /// <summary>
+        /// 获取父类对象
+        /// </summary>
+        /// <param name="child"></param>
+        /// <returns></returns>
         public static DependencyObject GetParentObject(this DependencyObject child)
         {
             if (child == null) return null;
