@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace CommonFramework.Extensions
 {
@@ -29,6 +30,18 @@ namespace CommonFramework.Extensions
         public static Point GetUIElementPosition(this UIElement element)
         {
             return new Point(Canvas.GetLeft(element), Canvas.GetTop(element));
+        }
+
+        /// <summary>
+        /// 获取颜色
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public static Brush GetBrush(this UIElement element,string Color)
+        {
+            BrushConverter brushConverter = new BrushConverter();
+            Brush brush = (Brush)brushConverter.ConvertFromString(Color);
+            return brush;
         }
     }
 }

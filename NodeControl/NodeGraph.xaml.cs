@@ -79,7 +79,6 @@ namespace NodeControl
 
             context.propertyChanged += Context_propertyChanged;
             this.context = context;
-
             
             this.MouseDown += NodeGraph_MouseDown;
             this.DragEnter += Canvas_DragEnter;     //没用    
@@ -363,7 +362,8 @@ namespace NodeControl
                 rectSelection.OnDragMoving(Deleta, MouseButton.Left, current, origMouseDownPoint);
 
                 Rect actualRangeRect = new Rect(origMouseDownPoint, current);
-                foreach (var item in getNodes())
+                var Nodes = getNodes();
+                foreach (var item in Nodes)
                 {
                     if (actualRangeRect.IsInclude(item.node.Element.GetBoundingBox()))
                     {

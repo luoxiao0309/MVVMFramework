@@ -77,7 +77,7 @@ namespace NodeSample
 
         void IWindow.AddNode(string name,Point position)
         {
-            if (name== "ConstantNode")
+            if (name == "ConstantNode")
             {
                 ConstantNode node = new ConstantNode();
                 node.CurrentNode.Position = position;
@@ -86,6 +86,12 @@ namespace NodeSample
             else if (name == "DisplayNode")
             {
                 DisplayNode node = new DisplayNode();
+                node.CurrentNode.Position = position;
+                graph.addNode(node.CurrentNode);
+            }
+            else
+            {
+                GroupNode node = new GroupNode();
                 node.CurrentNode.Position = position;
                 graph.addNode(node.CurrentNode);
             }

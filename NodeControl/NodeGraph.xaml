@@ -18,10 +18,11 @@
             <MenuItem InputGestureText="Ctrl + =" Header="Add Node">
                 <MenuItem Header="ConstantNode" Click="AddNode"/>
                 <MenuItem Header="DisplayNode" Click="AddNode"/>
+                <MenuItem Header="GroupNode" Click="AddNode"/>
             </MenuItem>
         </ContextMenu>
     </Border.ContextMenu>
     <Canvas x:Name="canvas" x:FieldModifier="public" ClipToBounds="True"  Height="3000" Width="3000" Background="Black">
-        
+        <local:GroupNode Canvas.Left="20" Canvas.Top="20"></local:GroupNode>
     </Canvas>
 </Border>
