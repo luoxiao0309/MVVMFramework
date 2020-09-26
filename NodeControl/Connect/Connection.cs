@@ -32,7 +32,7 @@ namespace NodeControl
                     return;
                 Current = null;
                 _inputConnector = value;
-                _inputConnector.node.moved += OnInputNodeMoved;
+                _inputConnector.node.movedEvent += OnInputNodeMoved;
                 _inputConnector.Connection = this;
 
                 if (_inputConnector != null)
@@ -63,7 +63,7 @@ namespace NodeControl
 
                 Current = null;
                 _outputConnector = value;
-                _outputConnector.node.moved += OnOutputNodeMoved;
+                _outputConnector.node.movedEvent += OnOutputNodeMoved;
                 _outputConnector.Connections.Add(this);
 
                 if (_outputConnector != null)

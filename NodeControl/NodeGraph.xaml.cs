@@ -39,7 +39,19 @@ namespace NodeControl
         /// <summary>
         /// 选中节点
         /// </summary>
-        private bool SelectedNode = false;
+        private bool selectedNode = false;
+
+        public bool SelectedNode
+        {
+            get
+            {
+                return selectedNode;
+            }
+            set
+            {
+                selectedNode = value;
+            }
+        }
 
         public bool Stop = false;
 
@@ -290,18 +302,9 @@ namespace NodeControl
             }
             else if (e.ChangedButton == MouseButton.Left)
             {
-                foreach (var item in getNodes())
+                if (selectedNode == false)
                 {
-                    if (item.Selected)
-                    {
-                        SelectedNode = true;
-                        break;
-                    }
-                }
-                
-                if (SelectedNode == false)
-                {
-                    origMouseDownPoint = e.GetPosition(this);
+                    origMouseDownPoint = Mouse.GetPosition(canvas);
                     rectSelection.OnStartDrag(origMouseDownPoint);
                 }
             }
@@ -325,11 +328,11 @@ namespace NodeControl
         {
             moveCamera = false;
 
-            if (SelectedNode == false)
+            if (selectedNode == false)
             {
                 rectSelection.OnDragEnd();
             }
-            SelectedNode = false;
+            selectedNode = false;
         }
 
         private void NodeGraph_Move(object sender, MouseEventArgs e)
@@ -353,12 +356,7 @@ namespace NodeControl
                 }
             }
 
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                Console.WriteLine("NodeGraph_Move SelectedNode:" + SelectedNode);
-            }
-            
-            if (e.LeftButton == MouseButtonState.Pressed && SelectedNode == false)
+            if (e.LeftButton == MouseButtonState.Pressed && selectedNode == false)
             {
                 var current = e.GetPosition(this);
                 Vector Deleta = current - origMouseDownPoint;
@@ -375,10 +373,24 @@ namespace NodeControl
                     {
                         item.Selected = true;
                     }
+                    else
+                    {
+                        item.Selected = false;
+                    }
 
                     if (item.Selected)
                     {
-                        SelectNodes.Add(item);
+                        if (SelectNodes.Contains(item)==false)
+                        {
+                            SelectNodes.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        if (SelectNodes.Contains(item))
+                        {
+                            SelectNodes.Remove(item);
+                        }
                     }
                 }
             }

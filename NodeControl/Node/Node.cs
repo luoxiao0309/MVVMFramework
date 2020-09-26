@@ -14,7 +14,7 @@ namespace NodeControl
     public class Node : IDisposable
     {
         public delegate void NodeEventHandler(Node node);
-        public event NodeEventHandler moved;
+        public event NodeEventHandler movedEvent;
 
         /// <summary>
         /// parent and wrapper for the Node Data
@@ -120,7 +120,7 @@ namespace NodeControl
                     
             //        break;
             //}
-            moved?.Invoke(this);
+            movedEvent?.Invoke(this);
         }
 
         private void mouseMove(object sender, MouseEventArgs args)
@@ -157,7 +157,6 @@ namespace NodeControl
                     }
                     else
                     {
-                        Console.WriteLine("移动节点");
                         UIElement element = (UIElement)sender;
                         Point p2 = args.GetPosition(graph.canvas);
                         Position = new Point(p2.X - dragStart.Value.X, p2.Y - dragStart.Value.Y);
@@ -166,11 +165,6 @@ namespace NodeControl
                     }
                 }
             }
-        }
-
-        public void MoveNode(UIElement element)
-        {
-
         }
 
         private bool isPointWithin(Point point)
@@ -205,23 +199,37 @@ namespace NodeControl
         {
             var element = (UIElement)sender;
 
-            if (graph.SelectNodes.Count > 0)
-            {
-                foreach (var item in graph.SelectNodes)
-                {
-                    item.dragStart = args.GetPosition(graph.canvas);
-                    item.BeginPosition = item.Position;
-                }
-                element.CaptureMouse();
-            }
-            else
+            if (graph.SelectNodes.Count == 0)
             {
                 BeginPosition = Position;
                 dragStart = args.GetPosition(element);
-                element.CaptureMouse();
                 Selected = true;
             }
+            else
+            {
+                if (graph.SelectNodes.Contains(this))
+                {
+                    foreach (var item in graph.SelectNodes)
+                    {
+                        item.dragStart = args.GetPosition(graph.canvas);
+                        item.BeginPosition = item.Position;
+                    }
+                }
+                else
+                {
+                    foreach (var item in graph.SelectNodes)
+                    {
+                        item.Selected = false;
+                    }
+                    graph.SelectNodes.Clear();
 
+                    BeginPosition = Position;
+                    dragStart = args.GetPosition(element);
+                    Selected = true;
+                }
+            }
+
+            element.CaptureMouse();
             graph.Stop = true;
         }
 
@@ -256,7 +264,7 @@ namespace NodeControl
                 Canvas.SetLeft(node.Element, value.X);
                 Canvas.SetTop(node.Element, value.Y);
 
-                moved?.Invoke(this);
+                movedEvent?.Invoke(this);
             }
         }
 
