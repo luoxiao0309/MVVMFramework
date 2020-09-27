@@ -70,6 +70,7 @@
     <Compile Include="Event\InvokeCommandExtension.cs" />
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
     <Compile Include="Extensions\ForEachExtensions.cs" />
+    <Compile Include="Extensions\MethodExtension.cs" />
     <Compile Include="Extensions\NotifyPropertyChangedExtensions.cs" />
     <Compile Include="Extensions\UIElementExtension.cs" />
     <Compile Include="Extensions\VisualTreeHelperExtensions.cs" />

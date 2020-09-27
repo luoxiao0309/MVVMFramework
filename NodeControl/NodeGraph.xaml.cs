@@ -240,6 +240,10 @@ namespace NodeControl
             List<Node> nodes = new List<Node>();
             foreach (INode node in x)
             {
+                if (node.CurrentNode==null)
+                {
+                    throw new Exception("空指针");
+                }
                 nodes.Add(node.CurrentNode);
             }
             return nodes.ToArray();

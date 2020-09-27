@@ -150,9 +150,16 @@ namespace NodeControl
                         
                         foreach (var item in graph.SelectNodes)
                         {
-                            Point Deleta = new Point(current.X - item.dragStart.Value.X, current.Y - item.dragStart.Value.Y);
-                            //移动线
-                            item.Position = new Point(item.BeginPosition.X+Deleta.X, item.BeginPosition.Y + Deleta.Y);
+                            if (item.dragStart!=null)
+                            {
+                                Point Deleta = new Point(current.X - item.dragStart.Value.X, current.Y - item.dragStart.Value.Y);
+                                //移动线
+                                item.Position = new Point(item.BeginPosition.X + Deleta.X, item.BeginPosition.Y + Deleta.Y);
+                            }
+                            else
+                            {
+                                throw new Exception("空指针");
+                            }
                         }
                     }
                     else
@@ -177,7 +184,23 @@ namespace NodeControl
         private void mouseUp(object sender, MouseEventArgs args)
         {
             var element = (UIElement)sender;
-            dragStart = null;
+
+            if (graph.SelectNodes.Count>0)
+            {
+                if (graph.SelectNodes.Contains(this)==false)
+                {
+                    dragStart = null;
+                }
+                else
+                {
+                    Console.WriteLine("包含当前节点");
+                }
+            }
+            else
+            {
+                dragStart = null;
+            }
+            
             element.ReleaseMouseCapture();
             Selected = false;
             if (isAboutToBeRemoved)
