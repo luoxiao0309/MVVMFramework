@@ -305,6 +305,8 @@ namespace NodeControl
             }
             else if (e.ChangedButton == MouseButton.Left)
             {
+                Console.WriteLine("NodeGraph_MouseDown......");
+
                 if (selectedNode == false)
                 {
                     origMouseDownPoint = Mouse.GetPosition(canvas);
@@ -336,6 +338,7 @@ namespace NodeControl
                 rectSelection.OnDragEnd();
             }
             selectedNode = false;
+            origMouseDownPoint = new Point(0,0);
         }
 
         private void NodeGraph_Move(object sender, MouseEventArgs e)
@@ -362,10 +365,14 @@ namespace NodeControl
             if (e.LeftButton == MouseButtonState.Pressed && selectedNode == false)
             {
                 var current = e.GetPosition(this);
+
+                Console.WriteLine("origMouseDownPoint: " + origMouseDownPoint);
+
                 Vector Deleta = current - origMouseDownPoint;
                 rectSelection.OnDragMoving(Deleta, MouseButton.Left, current, origMouseDownPoint);
 
                 Rect actualRangeRect = new Rect(origMouseDownPoint, current);
+                
                 var Nodes = getNodes();
                 foreach (var item in Nodes)
                 {

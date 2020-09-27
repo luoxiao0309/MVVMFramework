@@ -23,7 +23,7 @@ namespace NodeControl
 
         public NodeGraph graph { get; private set; }
         //public NodeChest chest { get; private set; }
-        private Nullable<Point> dragStart = null;
+        public Nullable<Point> dragStart = null;
 
         //public NodeGraphContext context => (graph != null) ? graph.context : chest.context;
         public NodeGraphContext context
@@ -123,137 +123,11 @@ namespace NodeControl
             movedEvent?.Invoke(this);
         }
 
-        private void mouseMove(object sender, MouseEventArgs args)
-        {
-            if (isTemplate)
-            {
-                // Get the current mouse position
-                Point mousePos = args.GetPosition(null);
-                Vector diff = startPoint - mousePos;
-
-                if (args.LeftButton == MouseButtonState.Pressed &&
-                    (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
-                    Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
-                {
-                    // Initialize the drag & drop operation
-                    DataObject dragData = new DataObject("node", node); // TODO: Doublecheck here!
-                    System.Windows.DragDrop.DoDragDrop(node.Element, dragData, DragDropEffects.Move);
-                }
-            }
-            else
-            {
-                if (dragStart != null && args.LeftButton == MouseButtonState.Pressed)
-                {
-                    if (graph.SelectNodes.Count>0)
-                    {
-                        Point current = args.GetPosition(graph.canvas);
-                        
-                        foreach (var item in graph.SelectNodes)
-                        {
-                            if (item.dragStart!=null)
-                            {
-                                Point Deleta = new Point(current.X - item.dragStart.Value.X, current.Y - item.dragStart.Value.Y);
-                                //移动线
-                                item.Position = new Point(item.BeginPosition.X + Deleta.X, item.BeginPosition.Y + Deleta.Y);
-                            }
-                            else
-                            {
-                                throw new Exception("空指针");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        UIElement element = (UIElement)sender;
-                        Point p2 = args.GetPosition(graph.canvas);
-                        Position = new Point(p2.X - dragStart.Value.X, p2.Y - dragStart.Value.Y);
-                        isAboutToBeRemoved = !isPointWithin(p2);
-                        graph.Stop = true; 
-                    }
-                }
-            }
-        }
-
         private bool isPointWithin(Point point)
         {
             if (point.X < 0 || point.Y < 0 || point.X > graph.ActualWidth || point.Y > graph.ActualHeight)
                 return false;
             return true;
-        }
-
-        private void mouseUp(object sender, MouseEventArgs args)
-        {
-            var element = (UIElement)sender;
-
-            if (graph.SelectNodes.Count>0)
-            {
-                if (graph.SelectNodes.Contains(this)==false)
-                {
-                    dragStart = null;
-                }
-                else
-                {
-                    Console.WriteLine("包含当前节点");
-                }
-            }
-            else
-            {
-                dragStart = null;
-            }
-            
-            element.ReleaseMouseCapture();
-            Selected = false;
-            if (isAboutToBeRemoved)
-                graph.removeNode(this);
-
-            graph.Stop = false;
-
-            if (graph.SelectNodes.Count > 0)
-            {
-                foreach (var item in graph.SelectNodes)
-                {
-                    item.Selected = false;
-                }
-                graph.SelectNodes.Clear();
-            }
-        }
-
-        private void mouseDown(object sender, MouseEventArgs args)
-        {
-            var element = (UIElement)sender;
-
-            if (graph.SelectNodes.Count == 0)
-            {
-                BeginPosition = Position;
-                dragStart = args.GetPosition(element);
-                Selected = true;
-            }
-            else
-            {
-                if (graph.SelectNodes.Contains(this))
-                {
-                    foreach (var item in graph.SelectNodes)
-                    {
-                        item.dragStart = args.GetPosition(graph.canvas);
-                        item.BeginPosition = item.Position;
-                    }
-                }
-                else
-                {
-                    foreach (var item in graph.SelectNodes)
-                    {
-                        item.Selected = false;
-                    }
-                    graph.SelectNodes.Clear();
-
-                    BeginPosition = Position;
-                    dragStart = args.GetPosition(element);
-                    Selected = true;
-                }
-            }
-
-            element.CaptureMouse();
-            graph.Stop = true;
         }
 
         private bool _isAboutToBeRemoved = false;
@@ -284,8 +158,12 @@ namespace NodeControl
             get { return new Point(Canvas.GetLeft(node.Element), Canvas.GetTop(node.Element)); }
             set
             {
+                Console.WriteLine("1. X: "+Canvas.GetLeft(node.Element)+"|Y: "+ Canvas.GetLeft(node.Element));
+
                 Canvas.SetLeft(node.Element, value.X);
                 Canvas.SetTop(node.Element, value.Y);
+
+                Console.WriteLine("2. X: " + Canvas.GetLeft(node.Element) + "|Y: " + Canvas.GetLeft(node.Element));
 
                 movedEvent?.Invoke(this);
             }
@@ -415,9 +293,137 @@ namespace NodeControl
             }
         }
 
-        //public Rect GetBoundingBox()
-        //{
-        //    return new Rect(Position.X, Position.Y, ActualWidth, ActualHeight);
-        //}
+
+        private void mouseMove(object sender, MouseEventArgs args)
+        {
+            if (isTemplate)
+            {
+                // Get the current mouse position
+                Point mousePos = args.GetPosition(null);
+                Vector diff = startPoint - mousePos;
+
+                if (args.LeftButton == MouseButtonState.Pressed &&
+                    (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                    Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
+                {
+                    // Initialize the drag & drop operation
+                    DataObject dragData = new DataObject("node", node); // TODO: Doublecheck here!
+                    System.Windows.DragDrop.DoDragDrop(node.Element, dragData, DragDropEffects.Move);
+                }
+            }
+            else
+            {
+                if (dragStart.HasValue && args.LeftButton == MouseButtonState.Pressed)
+                {
+                    if (graph.SelectNodes.Count > 0)
+                    {
+                        Point current = args.GetPosition(graph.canvas);
+
+                        foreach (var item in graph.SelectNodes)
+                        {
+                            if (item.dragStart.HasValue)
+                            {
+                                Point Deleta = new Point(current.X - item.dragStart.Value.X, current.Y - item.dragStart.Value.Y);
+                                //移动线
+                                item.Position = new Point(item.BeginPosition.X + Deleta.X, item.BeginPosition.Y + Deleta.Y);
+                            }
+                        }
+
+                        //graph.Stop = true;
+                    }
+                    else
+                    {
+                        UIElement element = (UIElement)sender;
+                        Point p2 = args.GetPosition(graph.canvas);
+                        Position = new Point(p2.X - dragStart.Value.X, p2.Y - dragStart.Value.Y);
+
+                        Console.WriteLine("p2："+ p2+ "|dragStart:"+ dragStart+ "|Position:"+ Position);
+                        isAboutToBeRemoved = !isPointWithin(p2);
+                        graph.Stop = true;
+                    }
+                }
+            }
+        }
+
+
+        private void mouseUp(object sender, MouseEventArgs args)
+        {
+            var element = (UIElement)sender;
+
+            if (graph.SelectNodes.Count > 0)
+            {
+                if (graph.SelectNodes.Contains(this) == false)
+                {
+                    dragStart = null;
+                }
+                else
+                {
+                    Console.WriteLine("包含当前节点");
+                }
+            }
+            else
+            {
+                dragStart = null;
+            }
+
+            element.ReleaseMouseCapture();
+            Selected = false;
+            if (isAboutToBeRemoved)
+                graph.removeNode(this);
+
+            graph.Stop = false;
+
+            if (graph.SelectNodes.Count > 0)
+            {
+                foreach (var item in graph.SelectNodes)
+                {
+                    item.Selected = false;
+                }
+                graph.SelectNodes.Clear();
+            }
+        }
+
+        private void mouseDown(object sender, MouseEventArgs args)
+        {
+            var element = (UIElement)sender;
+
+            if (graph.SelectNodes.Count == 0)
+            {
+                BeginPosition = Position;
+                dragStart = args.GetPosition(element);
+                Selected = true;
+            }
+            else
+            {
+                if (graph.SelectNodes.Contains(this))
+                {
+                    Console.WriteLine("Node 多个节点 MouseDown...");
+
+                    foreach (var item in graph.SelectNodes)
+                    {
+                        item.dragStart = args.GetPosition(graph.canvas);
+                        item.BeginPosition = item.Position;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Node 单个节点 MouseDown...");
+
+                    foreach (var item in graph.SelectNodes)
+                    {
+                        item.Selected = false;
+                    }
+                    graph.SelectNodes.Clear();
+
+                    BeginPosition = Position;
+                    dragStart = args.GetPosition(element);
+                    Selected = true;
+                }
+            }
+
+            element.CaptureMouse();
+            graph.Stop = true;
+        }
+
     }
 }

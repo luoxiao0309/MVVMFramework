@@ -39,6 +39,8 @@ namespace NodeControl
             InitializeComponent();
             CurrentNode = new Node(this);
             NodeMouseDown += GroupNodeMouseDown;
+            NodeMouseMove += GroupNodeMouseMove;
+            NodeMouseUp += GroupNodeMouseUp;
 
             this.MouseDown += (sender, args) => NodeMouseDown?.Invoke(sender, args);
             this.MouseMove += (sender, args) => NodeMouseMove?.Invoke(sender, args);
@@ -49,6 +51,10 @@ namespace NodeControl
         private double BorderSize = 4;
         public bool IsDraggingToResize { get; private set; } = false;
         DragResizeType _IsDraggingToResizeType = DragResizeType.None;
+
+        private Point Position;
+        private Rect _CapturedNodeRect;
+
         public Node CurrentNode { get; }
 
         public UIElement Element { get { return this; } }
@@ -116,17 +122,21 @@ namespace NodeControl
         /// <param name="e"></param>
         private void GroupNodeMouseDown(object sender, MouseButtonEventArgs e)
         {
-            
+            if (_IsDraggingToResizeType != DragResizeType.None)
+            {
+                IsDraggingToResize = true;
+                Position = new Point(Canvas.GetLeft(this), Canvas.GetTop(this));
+                _CapturedNodeRect = new Rect(Position, new Size(GroupBorder.ActualWidth, GroupBorder.ActualHeight));
+                CurrentNode.dragStart = null;
+            }
         }
-        
+
         private void GroupNodeMouseEnter(object sender, MouseEventArgs e)
         {
             if (IsDraggingToResize == false)
             {
                 UpdateMouseCursor(e);
             }
-           
-            Console.WriteLine("设置光标.....");
         }
         
         /// <summary>
@@ -212,5 +222,97 @@ namespace NodeControl
             }
         }
 
+        public void Resize(Point pos)
+        {
+            switch (_IsDraggingToResizeType)
+            {
+                case DragResizeType.LeftTop:
+                    {
+                        var x = (_CapturedNodeRect.Right - pos.X > MinHeight) ? pos.X : Position.X;
+                        var y = (_CapturedNodeRect.Bottom - pos.Y > MinHeight) ? pos.Y : Position.Y;
+                        Position = new Point(x, y);
+                        GroupBorder.Width = Math.Max(MinWidth, _CapturedNodeRect.Right - Position.X);
+                        GroupBorder.Height = Math.Max(MinWidth, _CapturedNodeRect.Bottom - Position.Y);
+                    }
+                    Mouse.SetCursor(Cursors.SizeNWSE);
+                    break;
+                case DragResizeType.RightTop:
+                    {
+                        var h = _CapturedNodeRect.Bottom - pos.Y;
+                        if (h > MinHeight)
+                        {
+                            Position = new Point(Position.X, pos.Y);
+                            GroupBorder.Height = Math.Max(MinHeight, h);
+                        }
+                    }
+                    GroupBorder.Width = Math.Max(MinWidth, pos.X - _CapturedNodeRect.X);
+                    Mouse.SetCursor(Cursors.SizeNESW);
+                    break;
+                case DragResizeType.LeftBottom:
+                    {
+                        var w = _CapturedNodeRect.Right - pos.X;
+                        if (w > MinWidth)
+                        {
+                            Position = new Point(pos.X, Position.Y);
+                            GroupBorder.Width = Math.Max(MinWidth, w);
+                        }
+                    }
+                    GroupBorder.Height = Math.Max(MinHeight, pos.Y - _CapturedNodeRect.Y);
+                    Mouse.SetCursor(Cursors.SizeNESW);
+                    break;
+                case DragResizeType.RightBottom:
+                    GroupBorder.Width = Math.Max(MinWidth, pos.X - _CapturedNodeRect.X);
+                    GroupBorder.Height = Math.Max(MinHeight, pos.Y - _CapturedNodeRect.Y);
+                    Mouse.SetCursor(Cursors.SizeNWSE);
+                    break;
+                case DragResizeType.Top:
+                    {
+                        var h = _CapturedNodeRect.Bottom - pos.Y;
+                        if (h > MinHeight)
+                        {
+                            Position = new Point(Position.X, pos.Y);
+                            GroupBorder.Height = Math.Max(MinHeight, h);
+                        }
+                    }
+                    Mouse.SetCursor(Cursors.SizeNS);
+                    break;
+                case DragResizeType.Bottom:
+                    GroupBorder.Height = Math.Max(MinHeight, pos.Y - _CapturedNodeRect.Y);
+                    Mouse.SetCursor(Cursors.SizeNS);
+                    break;
+                case DragResizeType.Left:
+                    {
+                        var w = _CapturedNodeRect.Right - pos.X;
+                        if (w > MinWidth)
+                        {
+                            Position = new Point(pos.X, Position.Y);
+                            GroupBorder.Width = Math.Max(MinWidth, w);
+                        }
+                    }
+                    Mouse.SetCursor(Cursors.SizeWE);
+                    break;
+                case DragResizeType.Right:
+                    GroupBorder.Width = Math.Max(MinWidth, pos.X - _CapturedNodeRect.X);
+                    Mouse.SetCursor(Cursors.SizeWE);
+                    break;
+            }
+
+            //UpdateInnerPosition();
+        }
+        
+        private void GroupNodeMouseMove(object sender, MouseEventArgs e)
+        {
+            if (IsDraggingToResize && e.LeftButton == MouseButtonState.Pressed)
+            {
+                Console.WriteLine("GroupNodeMouseMove.....");
+                Resize(e.GetPosition(null));
+            }
+        }
+
+
+        private void GroupNodeMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            IsDraggingToResize = false;
+        }
     }
 }
