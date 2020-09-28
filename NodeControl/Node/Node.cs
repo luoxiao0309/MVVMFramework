@@ -348,8 +348,10 @@ namespace NodeControl
             {
                 foreach (var item in graph.SelectNodes)
                 {
+                    item.Selected = false;
                     item.dragStart = null;
                 }
+                graph.SelectNodes.Clear();
             }
             dragStart = null;
 
@@ -357,18 +359,6 @@ namespace NodeControl
             Selected = false;
             if (isAboutToBeRemoved)
                 graph.removeNode(this);
-
-            graph.Stop = false;
-            graph.SelectedNode = false;
-
-            if (graph.SelectNodes.Count > 0)
-            {
-                foreach (var item in graph.SelectNodes)
-                {
-                    item.Selected = false;
-                }
-                graph.SelectNodes.Clear();
-            }
         }
 
         private void mouseDown(object sender, MouseEventArgs args)

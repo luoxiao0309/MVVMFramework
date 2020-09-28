@@ -343,6 +343,8 @@ namespace NodeControl
             {
                 rectSelection.OnDragEnd();
             }
+
+            Stop = false;
             SelectedNode = false;
             _OrigMouseDownPoint = new Point(0,0);
         }
