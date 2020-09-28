@@ -24,6 +24,15 @@ namespace NodeControl
         public readonly NodeGraphContext context;
 
         private Point origMouseDownPoint;
+        private Point _OrigMouseDownPoint
+        {
+            get => origMouseDownPoint;
+            set
+            {
+                origMouseDownPoint = value;
+                Console.WriteLine("origMouseDownPoint__1:"+ origMouseDownPoint);
+            }
+        }
 
         private INode LastDropItemNode = null;
 
@@ -82,7 +91,7 @@ namespace NodeControl
             
             this.MouseDown += NodeGraph_MouseDown;
             this.DragEnter += Canvas_DragEnter;     //没用    
-            this.Drop += NodeGraph_Drop;            //没用
+            //this.Drop += NodeGraph_Drop;            //没用
 
             this.MouseMove += NodeGraph_Move;
             this.MouseUp += NodeGraph_MouseUp;
@@ -301,16 +310,16 @@ namespace NodeControl
             if (e.ChangedButton == MouseButton.Middle)
             {
                 moveCamera = true;
-                origMouseDownPoint = e.GetPosition(this);
+                _OrigMouseDownPoint = e.GetPosition(this);
             }
             else if (e.ChangedButton == MouseButton.Left)
             {
                 Console.WriteLine("NodeGraph_MouseDown......");
 
-                if (selectedNode == false)
+                if (SelectedNode == false)
                 {
-                    origMouseDownPoint = Mouse.GetPosition(canvas);
-                    rectSelection.OnStartDrag(origMouseDownPoint);
+                    _OrigMouseDownPoint = Mouse.GetPosition(canvas);
+                    rectSelection.OnStartDrag(_OrigMouseDownPoint);
                 }
             }
             else if (e.ChangedButton == MouseButton.Right)
@@ -333,12 +342,14 @@ namespace NodeControl
         {
             moveCamera = false;
 
-            if (selectedNode == false)
+            if (SelectedNode == false)
             {
                 rectSelection.OnDragEnd();
             }
-            selectedNode = false;
-            origMouseDownPoint = new Point(0,0);
+            SelectedNode = false;
+            _OrigMouseDownPoint = new Point(0,0);
+
+            Console.WriteLine("NodeGraph_MouseUp....");
         }
 
         private void NodeGraph_Move(object sender, MouseEventArgs e)
@@ -351,8 +362,8 @@ namespace NodeControl
             if (moveCamera)
             {
                 Point current = e.GetPosition(this);
-                Vector Deleta = current - origMouseDownPoint;
-                origMouseDownPoint = current;
+                Vector Deleta = current - _OrigMouseDownPoint;
+                _OrigMouseDownPoint = current;
 
                 foreach (var item in getNodes())
                 {
@@ -362,17 +373,20 @@ namespace NodeControl
                 }
             }
 
-            if (e.LeftButton == MouseButtonState.Pressed && selectedNode == false)
+            if (e.LeftButton == MouseButtonState.Pressed && SelectedNode == false)
             {
-                var current = e.GetPosition(this);
-
-                Console.WriteLine("origMouseDownPoint: " + origMouseDownPoint);
-
-                Vector Deleta = current - origMouseDownPoint;
-                rectSelection.OnDragMoving(Deleta, MouseButton.Left, current, origMouseDownPoint);
-
-                Rect actualRangeRect = new Rect(origMouseDownPoint, current);
+                var current = e.GetPosition(canvas);
                 
+                Vector Deleta = current - _OrigMouseDownPoint;
+                rectSelection.OnDragMoving(Deleta, MouseButton.Left, current, _OrigMouseDownPoint);
+
+                Rect actualRangeRect = new Rect(_OrigMouseDownPoint, current);
+
+                if (actualRangeRect.Width==0 || actualRangeRect.Height==0)
+                {
+                    return;
+                }
+
                 var Nodes = getNodes();
                 foreach (var item in Nodes)
                 {

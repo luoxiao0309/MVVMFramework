@@ -81,7 +81,7 @@ namespace NodeControl
 
         private void Node_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            startPoint = e.GetPosition(null);
+            startPoint = e.GetPosition(graph.canvas);
         }
 
         protected void OnVisualParentChanged(DependencyObject oldParent, DependencyObject current)
@@ -158,13 +158,9 @@ namespace NodeControl
             get { return new Point(Canvas.GetLeft(node.Element), Canvas.GetTop(node.Element)); }
             set
             {
-                Console.WriteLine("1. X: "+Canvas.GetLeft(node.Element)+"|Y: "+ Canvas.GetLeft(node.Element));
-
                 Canvas.SetLeft(node.Element, value.X);
                 Canvas.SetTop(node.Element, value.Y);
-
-                Console.WriteLine("2. X: " + Canvas.GetLeft(node.Element) + "|Y: " + Canvas.GetLeft(node.Element));
-
+                
                 movedEvent?.Invoke(this);
             }
         }
@@ -299,7 +295,7 @@ namespace NodeControl
             if (isTemplate)
             {
                 // Get the current mouse position
-                Point mousePos = args.GetPosition(null);
+                Point mousePos = args.GetPosition(graph.canvas);
                 Vector diff = startPoint - mousePos;
 
                 if (args.LeftButton == MouseButtonState.Pressed &&
@@ -328,8 +324,7 @@ namespace NodeControl
                                 item.Position = new Point(item.BeginPosition.X + Deleta.X, item.BeginPosition.Y + Deleta.Y);
                             }
                         }
-
-                        //graph.Stop = true;
+                        graph.Stop = true;
                     }
                     else
                     {
@@ -337,7 +332,7 @@ namespace NodeControl
                         Point p2 = args.GetPosition(graph.canvas);
                         Position = new Point(p2.X - dragStart.Value.X, p2.Y - dragStart.Value.Y);
 
-                        Console.WriteLine("p2："+ p2+ "|dragStart:"+ dragStart+ "|Position:"+ Position);
+                        Console.WriteLine("Node MouseMove p2："+ p2+ "|dragStart:"+ dragStart+ "|Position:"+ Position);
                         isAboutToBeRemoved = !isPointWithin(p2);
                         graph.Stop = true;
                     }
@@ -352,19 +347,12 @@ namespace NodeControl
 
             if (graph.SelectNodes.Count > 0)
             {
-                if (graph.SelectNodes.Contains(this) == false)
+                foreach (var item in graph.SelectNodes)
                 {
-                    dragStart = null;
-                }
-                else
-                {
-                    Console.WriteLine("包含当前节点");
+                    item.dragStart = null;
                 }
             }
-            else
-            {
-                dragStart = null;
-            }
+            dragStart = null;
 
             element.ReleaseMouseCapture();
             Selected = false;
@@ -372,6 +360,7 @@ namespace NodeControl
                 graph.removeNode(this);
 
             graph.Stop = false;
+            graph.SelectedNode = false;
 
             if (graph.SelectNodes.Count > 0)
             {
@@ -386,6 +375,7 @@ namespace NodeControl
         private void mouseDown(object sender, MouseEventArgs args)
         {
             var element = (UIElement)sender;
+            graph.SelectedNode = true;
 
             if (graph.SelectNodes.Count == 0)
             {

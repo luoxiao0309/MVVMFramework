@@ -149,7 +149,6 @@ namespace NodeControl
             if (pos.X < BorderSize)
             {
                 // left
-
                 // cursor is inside left vertical border.
                 if (pos.Y < BorderSize)
                 {
@@ -292,20 +291,18 @@ namespace NodeControl
                     Mouse.SetCursor(Cursors.SizeWE);
                     break;
                 case DragResizeType.Right:
-                    GroupBorder.Width = Math.Max(MinWidth, pos.X - _CapturedNodeRect.X);
+                    //GroupBorder.Width = Math.Max(MinWidth, pos.X - _CapturedNodeRect.X);
+                    GroupBorder.Width = pos.X - _CapturedNodeRect.X;
                     Mouse.SetCursor(Cursors.SizeWE);
                     break;
             }
-
-            //UpdateInnerPosition();
         }
         
         private void GroupNodeMouseMove(object sender, MouseEventArgs e)
         {
             if (IsDraggingToResize && e.LeftButton == MouseButtonState.Pressed)
             {
-                Console.WriteLine("GroupNodeMouseMove.....");
-                Resize(e.GetPosition(null));
+                Resize(e.GetPosition(CurrentNode.graph.canvas));
             }
         }
 
