@@ -332,7 +332,6 @@ namespace NodeControl
                         Point p2 = args.GetPosition(graph.canvas);
                         Position = new Point(p2.X - dragStart.Value.X, p2.Y - dragStart.Value.Y);
 
-                        Console.WriteLine("Node MouseMove p2："+ p2+ "|dragStart:"+ dragStart+ "|Position:"+ Position);
                         isAboutToBeRemoved = !isPointWithin(p2);
                         graph.Stop = true;
                     }

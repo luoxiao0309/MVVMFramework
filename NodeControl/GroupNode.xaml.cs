@@ -145,7 +145,7 @@ namespace NodeControl
         /// <param name="e"></param>
         void UpdateMouseCursor(MouseEventArgs e)
         {
-            var pos = e.GetPosition(this);
+            var pos = e.GetPosition(GroupBorder);
             if (pos.X < BorderSize)
             {
                 // left
@@ -175,7 +175,6 @@ namespace NodeControl
             else if (pos.X > (ActualWidth - BorderSize))
             {
                 // right
-
                 // cursor is inside right vertical border.
                 if (pos.Y < BorderSize)
                 {
@@ -193,7 +192,6 @@ namespace NodeControl
                 }
                 else
                 {
-                    // right
                     _IsDraggingToResizeType = DragResizeType.Right;
                     //Mouse.SetCursor(Cursors.SizeWE);
                     Cursor = Cursors.SizeWE;
@@ -216,6 +214,7 @@ namespace NodeControl
                 }
                 else
                 {
+                    Cursor = Cursors.Arrow;
                     _IsDraggingToResizeType = DragResizeType.None;
                 }
             }
@@ -291,8 +290,7 @@ namespace NodeControl
                     Mouse.SetCursor(Cursors.SizeWE);
                     break;
                 case DragResizeType.Right:
-                    //GroupBorder.Width = Math.Max(MinWidth, pos.X - _CapturedNodeRect.X);
-                    GroupBorder.Width = pos.X - _CapturedNodeRect.X;
+                    GroupBorder.Width = Math.Max(MinWidth, pos.X - _CapturedNodeRect.X);
                     Mouse.SetCursor(Cursors.SizeWE);
                     break;
             }
@@ -303,6 +301,11 @@ namespace NodeControl
             if (IsDraggingToResize && e.LeftButton == MouseButtonState.Pressed)
             {
                 Resize(e.GetPosition(CurrentNode.graph.canvas));
+            }
+
+            if (IsDraggingToResize == false)
+            {
+                UpdateMouseCursor(e);
             }
         }
 

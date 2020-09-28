@@ -30,7 +30,6 @@ namespace NodeControl
             set
             {
                 origMouseDownPoint = value;
-                Console.WriteLine("origMouseDownPoint__1:"+ origMouseDownPoint);
             }
         }
 
@@ -314,8 +313,6 @@ namespace NodeControl
             }
             else if (e.ChangedButton == MouseButton.Left)
             {
-                Console.WriteLine("NodeGraph_MouseDown......");
-
                 if (SelectedNode == false)
                 {
                     _OrigMouseDownPoint = Mouse.GetPosition(canvas);
@@ -348,8 +345,6 @@ namespace NodeControl
             }
             SelectedNode = false;
             _OrigMouseDownPoint = new Point(0,0);
-
-            Console.WriteLine("NodeGraph_MouseUp....");
         }
 
         private void NodeGraph_Move(object sender, MouseEventArgs e)

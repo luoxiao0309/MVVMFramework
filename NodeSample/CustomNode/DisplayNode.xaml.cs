@@ -76,7 +76,6 @@ namespace NodeSample
         /// <returns>UIElement default Instance</returns>
         public UIElement CreateDefaultNode()
         {
-            Console.WriteLine("CreateDefaultNode....");
             return null;
             //return new SimpleNode();
         }
