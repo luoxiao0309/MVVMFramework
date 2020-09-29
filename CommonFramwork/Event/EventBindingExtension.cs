@@ -105,6 +105,11 @@ namespace CommonFramework.Event
 
         static readonly MethodInfo getMethod = typeof(EventBindingExtension).GetMethod("HandlerIntern", new Type[] { typeof(object), typeof(object), typeof(string), typeof(string) });
 
+        /// <summary>
+        /// 未调用
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         static void Handler(object sender, object args)
         {
             HandlerIntern(sender, args, "cmd", null);

@@ -73,6 +73,12 @@ namespace NodeControl
         public event MouseButtonEventHandler NodeMouseUp;
         public event ParentChanged NodeParentChanged;
 
+        public List<Node> IncludeNodes = new List<Node>();
+        /// <summary>
+        /// 鼠标起始位置
+        /// </summary>
+        private Point MouseStartPos;
+
         public UIElement CreateDefaultNode()
         {
             return null;
@@ -122,12 +128,29 @@ namespace NodeControl
         /// <param name="e"></param>
         private void GroupNodeMouseDown(object sender, MouseButtonEventArgs e)
         {
+            e.Handled = true;
+            MouseStartPos = e.GetPosition(CurrentNode.graph);
+
             if (_IsDraggingToResizeType != DragResizeType.None)
             {
                 IsDraggingToResize = true;
                 Position = new Point(Canvas.GetLeft(this), Canvas.GetTop(this));
                 _CapturedNodeRect = new Rect(Position, new Size(GroupBorder.ActualWidth, GroupBorder.ActualHeight));
                 CurrentNode.dragStart = null;
+            }
+            else
+            {
+                var CurrentRect =  CurrentNode.node.Element.GetBoundingBox();
+                foreach (var item in CurrentNode.graph.getNodes())
+                {
+                    var itemRect = item.node.Element.GetBoundingBox();
+                    if (CurrentRect.IsInclude(itemRect))
+                    {
+                        item.Selected = true;
+                        IncludeNodes.Add(item);
+                        item.BeginPosition = item.Position;
+                    }
+                }
             }
         }
 
@@ -303,9 +326,21 @@ namespace NodeControl
                 Resize(e.GetPosition(CurrentNode.graph.canvas));
             }
 
+            //移动组节点框
             if (IsDraggingToResize == false)
             {
                 UpdateMouseCursor(e);
+
+                if (IncludeNodes.Count>0)
+                {
+                    Point current = e.GetPosition(CurrentNode.graph.canvas);
+                    Vector Deleta = new Vector(current.X - MouseStartPos.X, current.Y - MouseStartPos.Y);
+                   
+                    foreach (var item in IncludeNodes)
+                    {
+                        item.Position = item.BeginPosition + Deleta;
+                    }
+                }
             }
         }
 
@@ -313,6 +348,8 @@ namespace NodeControl
         private void GroupNodeMouseUp(object sender, MouseButtonEventArgs e)
         {
             IsDraggingToResize = false;
+
+            IncludeNodes.Clear();
         }
     }
 }

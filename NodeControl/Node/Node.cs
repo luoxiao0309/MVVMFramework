@@ -59,6 +59,10 @@ namespace NodeControl
         /// 起始位置
         /// </summary>
         public Point BeginPosition;
+        /// <summary>
+        /// 鼠标起始位置
+        /// </summary>
+        public Point MouseStartPos;
 
         public Node(INode visual)
         {
@@ -324,17 +328,18 @@ namespace NodeControl
                                 item.Position = new Point(item.BeginPosition.X + Deleta.X, item.BeginPosition.Y + Deleta.Y);
                             }
                         }
-                        graph.Stop = true;
                     }
                     else
                     {
                         UIElement element = (UIElement)sender;
-                        Point p2 = args.GetPosition(graph.canvas);
-                        Position = new Point(p2.X - dragStart.Value.X, p2.Y - dragStart.Value.Y);
+                        Point current = args.GetPosition(graph.canvas);
+                        Vector Delta = current - MouseStartPos;
+                        Position = BeginPosition+Delta;
 
-                        isAboutToBeRemoved = !isPointWithin(p2);
-                        graph.Stop = true;
+                        isAboutToBeRemoved = !isPointWithin(current);
                     }
+
+                    args.Handled = true;
                 }
             }
         }
@@ -365,10 +370,11 @@ namespace NodeControl
         {
             var element = (UIElement)sender;
             graph.SelectedNode = true;
+            MouseStartPos = args.GetPosition(graph.canvas);
+            BeginPosition = Position;
 
             if (graph.SelectNodes.Count == 0)
             {
-                BeginPosition = Position;
                 dragStart = args.GetPosition(element);
                 Selected = true;
             }
@@ -376,8 +382,6 @@ namespace NodeControl
             {
                 if (graph.SelectNodes.Contains(this))
                 {
-                    Console.WriteLine("Node 多个节点 MouseDown...");
-
                     foreach (var item in graph.SelectNodes)
                     {
                         item.dragStart = args.GetPosition(graph.canvas);
@@ -386,22 +390,18 @@ namespace NodeControl
                 }
                 else
                 {
-                    Console.WriteLine("Node 单个节点 MouseDown...");
-
                     foreach (var item in graph.SelectNodes)
                     {
                         item.Selected = false;
                     }
                     graph.SelectNodes.Clear();
-
-                    BeginPosition = Position;
                     dragStart = args.GetPosition(element);
                     Selected = true;
                 }
             }
 
             element.CaptureMouse();
-            graph.Stop = true;
+            args.Handled = true;
         }
 
     }

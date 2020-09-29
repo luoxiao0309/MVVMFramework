@@ -31,7 +31,6 @@ namespace MVVMFramework.ViewModel
             set { this.SetProperty(ref this.list, value); }
         }
 
-
         public InvokeCommandViewModel()
         {
             this.List = new ObservableCollection<ItemViewModel>()

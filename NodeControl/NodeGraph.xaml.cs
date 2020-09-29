@@ -61,8 +61,6 @@ namespace NodeControl
             }
         }
 
-        public bool Stop = false;
-
         /// <summary>
         /// 管道刚度
         /// </summary>
@@ -301,10 +299,7 @@ namespace NodeControl
         /// <param name="e"></param>
         private void NodeGraph_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (Stop)
-            {
-                return;
-            }
+            Console.WriteLine("NodeGraph_MouseDown.......");
             
             if (e.ChangedButton == MouseButton.Middle)
             {
@@ -343,19 +338,13 @@ namespace NodeControl
             {
                 rectSelection.OnDragEnd();
             }
-
-            Stop = false;
+            
             SelectedNode = false;
             _OrigMouseDownPoint = new Point(0,0);
         }
 
         private void NodeGraph_Move(object sender, MouseEventArgs e)
         {
-            if (Stop)
-            {
-                return;
-            }
-
             if (moveCamera)
             {
                 Point current = e.GetPosition(this);
