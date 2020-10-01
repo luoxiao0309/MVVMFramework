@@ -35,6 +35,9 @@ namespace NodeControl
 
         public Point GetAboluteCenterPosition()
         {
+            //var centerPoint = new Point(this.ActualWidth / 2, this.ActualHeight / 2);
+            //var result = this.TransformToAncestor(node.graph.canvas).Transform(centerPoint);
+            //return result;
             //Transform 变换指定点
             return this.TransformToVisual(node.node.Element).Transform(new Point(Canvas.GetLeft(node.node.Element) + 6, Canvas.GetTop(node.node.Element) + 6));
         }

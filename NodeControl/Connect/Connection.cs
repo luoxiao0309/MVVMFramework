@@ -69,7 +69,9 @@ namespace NodeControl
                 if (_outputConnector != null)
                 {
                     if (_outputConnector.IsLoaded)
+                    {
                         SetAnchorPointA(OutputConnector.GetAboluteCenterPosition());
+                    }
                     else
                         _outputConnector.Loaded += OnOutputConnectorLoaded;
                 }
@@ -115,7 +117,6 @@ namespace NodeControl
             Path.Data = pathGeometry;
 
             Graph.canvas.Children.Add(Path);
-            //((UIElement)Graph.canvas.Parent).MouseMove += Canvas_MouseMove;
             ((UIElement)Graph.canvas).MouseMove += Canvas_MouseMove;
         }
 

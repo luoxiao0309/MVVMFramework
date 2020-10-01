@@ -23,6 +23,11 @@ namespace NodeControl
     {
         public readonly NodeGraphContext context;
 
+        public float Zoomfactor { get; set; } = 1.1f;
+        ScaleTransform _Scale = new ScaleTransform(1.0, 1.0);
+        private readonly MatrixTransform _transform = new MatrixTransform();
+        private Point MouseStartPos;
+
         private Point origMouseDownPoint;
         private Point _OrigMouseDownPoint
         {
@@ -87,6 +92,7 @@ namespace NodeControl
             this.context = context;
             
             this.MouseDown += NodeGraph_MouseDown;
+            this.MouseWheel += PanAndZoomCanvas_MouseWheel;
             this.DragEnter += Canvas_DragEnter;     //没用    
             //this.Drop += NodeGraph_Drop;            //没用
 
@@ -95,6 +101,10 @@ namespace NodeControl
             this.MouseLeave += NodeGraph_MouseLeave;
             this.AllowDrop = true;
             rectSelection = new RectSelection(this);
+
+            var transfromGroup = new TransformGroup();
+            transfromGroup.Children.Add(_Scale);
+            canvas.RenderTransform = transfromGroup;
         }
 
         private void Context_propertyChanged(string propertyName)
@@ -305,6 +315,12 @@ namespace NodeControl
             {
                 moveCamera = true;
                 _OrigMouseDownPoint = e.GetPosition(this);
+                MouseStartPos = e.GetPosition(canvas);
+
+                foreach (var item in getNodes())
+                {
+                    item.BeginPosition = item.Position;
+                }
             }
             else if (e.ChangedButton == MouseButton.Left)
             {
@@ -347,15 +363,13 @@ namespace NodeControl
         {
             if (moveCamera)
             {
-                Point current = e.GetPosition(this);
-                Vector Deleta = current - _OrigMouseDownPoint;
-                _OrigMouseDownPoint = current;
-
+                Point current = e.GetPosition(canvas);
+                Vector Deleta = current - MouseStartPos;
+                
                 foreach (var item in getNodes())
                 {
-                    item.node.Element.MoveElement(Deleta);
                     //移动线
-                    item.Position = item.node.Element.GetUIElementPosition();
+                    item.Position = item.BeginPosition+ Deleta;
                 }
             }
 
@@ -411,6 +425,53 @@ namespace NodeControl
         {
             moveCamera = false;
             rectSelection.OnDragEnd();
+        }
+
+        private void PanAndZoomCanvas_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta<0)
+            {
+                _Scale.ScaleX += 0.1;
+                _Scale.ScaleY += 0.1;
+            }
+            else
+            {
+                _Scale.ScaleX -= 0.1;
+                _Scale.ScaleY -= 0.1;
+                if (_Scale.ScaleX<=0.1)
+                {
+                    _Scale.ScaleX = 0.1;
+                    _Scale.ScaleY = 0.1;
+                }
+            }
+            //InvalidateVisual();
+            Console.WriteLine("ScaleX：" + _Scale.ScaleX + ",ScaleY：" + _Scale.ScaleY + ",Width:" + canvas.Width + ",Height:" + canvas.Height);
+
+            //float scaleFactor = Zoomfactor;
+            //if (e.Delta < 0)
+            //{
+            //    scaleFactor = 1f / scaleFactor;
+            //}
+
+            //Point mousePostion = e.GetPosition(this);
+
+            //Matrix scaleMatrix = _transform.Matrix;
+            //scaleMatrix.ScaleAt(scaleFactor, scaleFactor, mousePostion.X, mousePostion.Y);
+            //_transform.Matrix = scaleMatrix;
+
+            //foreach (UIElement child in this.canvas.Children)
+            //{
+            //    double x = Canvas.GetLeft(child);
+            //    double y = Canvas.GetTop(child);
+
+            //    double sx = x * scaleFactor;
+            //    double sy = y * scaleFactor;
+
+            //    Canvas.SetLeft(child, sx);
+            //    Canvas.SetTop(child, sy);
+
+            //    child.RenderTransform = _transform;
+            //}
         }
         #endregion
 
