@@ -178,7 +178,7 @@ namespace CommonFramework.Event
             var vm = target.DataContext as ViewModelBase;
             if (vm != null) return vm;
 
-            var parent = target.GetParentObject() as FrameworkElement;
+            var parent = target.GetParent() as FrameworkElement;
 
             return FindViewModel(parent);
         }
