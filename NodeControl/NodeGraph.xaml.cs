@@ -379,10 +379,10 @@ namespace NodeControl
                 
                 Vector Deleta = current - _OrigMouseDownPoint;
                 rectSelection.OnDragMoving(Deleta, MouseButton.Left, current, _OrigMouseDownPoint);
-
+                
                 Rect actualRangeRect = new Rect(_OrigMouseDownPoint, current);
 
-                if (actualRangeRect.Width==0 || actualRangeRect.Height==0)
+                if (actualRangeRect.Width==0 || actualRangeRect.Height==0|| (actualRangeRect.X==0 && actualRangeRect.Y==0))
                 {
                     return;
                 }
@@ -445,8 +445,7 @@ namespace NodeControl
                 }
             }
             //InvalidateVisual();
-            Console.WriteLine("ScaleX：" + _Scale.ScaleX + ",ScaleY：" + _Scale.ScaleY + ",Width:" + canvas.Width + ",Height:" + canvas.Height);
-
+            
             //float scaleFactor = Zoomfactor;
             //if (e.Delta < 0)
             //{

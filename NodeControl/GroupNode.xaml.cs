@@ -144,11 +144,14 @@ namespace NodeControl
                 foreach (var item in CurrentNode.graph.getNodes())
                 {
                     var itemRect = item.node.Element.GetBoundingBox();
-                    if (CurrentRect.IsInclude(itemRect))
+                    if (CurrentNode!=item)
                     {
-                        item.Selected = true;
-                        IncludeNodes.Add(item);
-                        item.BeginPosition = item.Position;
+                        if (CurrentRect.IsInclude(itemRect))
+                        {
+                            item.Selected = true;
+                            IncludeNodes.Add(item);
+                            item.BeginPosition = item.Position;
+                        }
                     }
                 }
             }

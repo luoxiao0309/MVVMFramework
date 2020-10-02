@@ -49,6 +49,10 @@ namespace NodeControl
             set
             {
                 _selected = value;
+                //if (node is GroupNode && value)
+                //{
+                //    Console.WriteLine("---------GroupNode--------------");
+                //}
                 node.SetSelected(_selected);
             }
         }
@@ -126,36 +130,7 @@ namespace NodeControl
             //}
             movedEvent?.Invoke(this);
         }
-
-        private bool isPointWithin(Point point)
-        {
-            if (point.X < 0 || point.Y < 0 || point.X > graph.ActualWidth || point.Y > graph.ActualHeight)
-                return false;
-            return true;
-        }
-
-        private bool _isAboutToBeRemoved = false;
-        public bool isAboutToBeRemoved
-        {
-            get { return _isAboutToBeRemoved; }
-            private set
-            {
-                if (_isAboutToBeRemoved == value)
-                    return;
-
-                _isAboutToBeRemoved = value;
-                if (_isAboutToBeRemoved)
-                {
-                    //BorderBrush = Brushes.Red;
-                    //BorderThickness = new Thickness(2);
-                }
-                else
-                {
-                    //BorderBrush = Brushes.White;
-                    //BorderThickness = new Thickness(0);
-                }
-            }
-        }
+        
 
         public Point Position
         {
@@ -335,8 +310,6 @@ namespace NodeControl
                         Point current = args.GetPosition(graph.canvas);
                         Vector Delta = current - MouseStartPos;
                         Position = BeginPosition+Delta;
-
-                        isAboutToBeRemoved = !isPointWithin(current);
                     }
 
                     args.Handled = true;
@@ -362,8 +335,6 @@ namespace NodeControl
 
             element.ReleaseMouseCapture();
             Selected = false;
-            if (isAboutToBeRemoved)
-                graph.removeNode(this);
         }
 
         private void mouseDown(object sender, MouseEventArgs args)

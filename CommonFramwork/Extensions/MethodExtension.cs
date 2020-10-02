@@ -26,9 +26,26 @@ namespace CommonFramework.Extensions
 
     public class MethodHelper
     {
-        public static MethodBase GetCurrentMethod()
+        /// <summary>
+        /// 获取当前付费.
+        /// </summary>
+        public static MethodBase CurrentMethod
         {
-            return MethodBase.GetCurrentMethod();
+            get
+            {
+                return MethodBase.GetCurrentMethod();
+            }
+        }
+
+        /// <summary>
+        /// 获取当前方法技术栈
+        /// </summary>
+        public static string CurrentFullCallStack
+        {
+            get
+            {
+                return CurrentMethod.GetFullCallStack();
+            }
         }
     }
 }

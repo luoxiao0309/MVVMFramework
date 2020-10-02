@@ -81,7 +81,6 @@
     <Compile Include="MVVM\WeakEventHandlerManager.cs" />
     <Compile Include="Resources\ResourceInstance.cs" />
     <Compile Include="Resources\SharedResourceDictionary.cs" />
-    <Compile Include="Util\DependencyObjectUtil.cs" />
     <Compile Include="MVVM\RelayCommand.cs" />
     <Compile Include="MVVM\RelayCommandType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -94,6 +93,7 @@
   <ItemGroup>
     <Folder Include="Converter\" />
     <Folder Include="Template\" />
+    <Folder Include="Util\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
