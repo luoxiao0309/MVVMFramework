@@ -79,6 +79,16 @@ namespace NodeControl
         /// </summary>
         private Point MouseStartPos;
 
+        public Point InnerPosition
+        {
+            get
+            {
+                var diff_x = BorderSize;
+                var diff_y = __GroupNodeHeader__.ActualHeight + BorderSize;
+                return new Point(Position.X + diff_x, Position.Y + diff_y);
+            }
+        }
+
         public UIElement CreateDefaultNode()
         {
             return null;
@@ -353,6 +363,51 @@ namespace NodeControl
             IsDraggingToResize = false;
 
             IncludeNodes.Clear();
+        }
+
+        public bool IsInsideCompletely(Point pos)
+        {
+            return InnerPosition.X <= pos.X && pos.X <= (InnerPosition.X + (ActualHeight - __GroupNodeHeader__.ActualHeight))
+                && InnerPosition.Y <= pos.Y && pos.Y <= (InnerPosition.Y + ActualWidth);
+        }
+        
+
+        public Rect GetInnerBoundingBox()
+        {
+            return new Rect(InnerPosition, new Size(ActualWidth, ActualHeight));
+        }
+
+        public void ExpandSize(Rect rect)
+        {
+            var oldPosition = Position;
+            var maxX = Math.Max(oldPosition.X + GroupBorder.Width, rect.Right + BorderSize);
+            var maxY = Math.Max(oldPosition.Y + GroupBorder.Height, rect.Bottom + BorderSize);
+
+            var x = rect.X - BorderSize;
+            var y = rect.Y - __GroupNodeHeader__.ActualHeight - BorderSize;
+            UpdatePosition(Math.Min(x, Position.X), Math.Min(y, Position.Y));
+            
+            var w = rect.Width + BorderSize * 2;
+            var h = rect.Height + BorderSize * 2 + __GroupNodeHeader__.ActualHeight;
+            GroupBorder.Width = Math.Max(w, maxX - Position.X);
+            GroupBorder.Height = Math.Max(h, maxY - Position.Y);
+        }
+
+        public void UpdatePosition(double x, double y)
+        {
+            Position = new Point(x, y);
+        }
+
+        public void ChangeInnerColor(bool isInsideNode)
+        {
+            if (isInsideNode)
+            {
+                GroupBorder.Background = Brushes.Green;
+            }
+            else
+            {
+                GroupBorder.Background = Brushes.Transparent;
+            }
         }
     }
 }

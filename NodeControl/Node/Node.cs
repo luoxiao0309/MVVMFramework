@@ -76,7 +76,6 @@ namespace NodeControl
 
         private void initialize()
         {
-            //Background = (Brush)converter.ConvertFromString("#262626");
             node.NodePreviewMouseLeftButtonDown += Node_PreviewMouseLeftButtonDown;
             node.NodeMouseDown += mouseDown;
             node.NodeMouseMove += mouseMove;
@@ -290,10 +289,11 @@ namespace NodeControl
             {
                 if (dragStart.HasValue && args.LeftButton == MouseButtonState.Pressed)
                 {
+                    List<Node> listNodes = new List<Node>();
+                    Point current = args.GetPosition(graph.canvas);
                     if (graph.SelectNodes.Count > 0)
                     {
-                        Point current = args.GetPosition(graph.canvas);
-
+                        listNodes = graph.SelectNodes;
                         foreach (var item in graph.SelectNodes)
                         {
                             if (item.dragStart.HasValue)
@@ -307,12 +307,28 @@ namespace NodeControl
                     else
                     {
                         UIElement element = (UIElement)sender;
-                        Point current = args.GetPosition(graph.canvas);
                         Vector Delta = current - MouseStartPos;
                         Position = BeginPosition+Delta;
+
+                        listNodes.Add(this);
                     }
 
                     args.Handled = true;
+                    
+                    var groupNodes = graph.canvas.Children.OfType<GroupNode>().ToArray();
+                    var draggingGroupNodes = listNodes.OfType<GroupNode>().ToArray();
+                    var boundingBoxes = listNodes.Select(arg => arg.node.Element.GetBoundingBox()).ToArray();
+                    foreach (var groupNode in groupNodes)
+                    {
+                        if (draggingGroupNodes.Contains(groupNode))
+                        {
+                            continue;
+                        }
+
+                        bool isInsideNode = false;
+                        isInsideNode = groupNode.IsInsideCompletely(current);
+                        groupNode.ChangeInnerColor(isInsideNode);
+                    }
                 }
             }
         }
@@ -335,6 +351,60 @@ namespace NodeControl
 
             element.ReleaseMouseCapture();
             Selected = false;
+
+            GroupNode[] groupNodes;
+            if (element is GroupNode)
+            {
+                GroupNode groupNode = element as GroupNode;
+                groupNodes = graph.canvas.Children.OfType<GroupNode>().Where(arg => (arg == groupNode) == false).ToArray();
+            }
+            else
+            {
+                groupNodes = graph.canvas.Children.OfType<GroupNode>().ToArray();
+            }
+            
+            var isInsideAtLeastOneNode = false;
+            var cursor_bb = new Rect(args.GetPosition(graph.canvas), new Size(1, 1));
+            isInsideAtLeastOneNode = groupNodes.Any(arg => cursor_bb.IntersectsWith(arg.GetBoundingBox()));
+
+            List<Node> dragNodes = new List<Node>();
+            if (graph.SelectNodes.Count > 0)
+            {
+                if (isInsideAtLeastOneNode)
+                {
+                    dragNodes = graph.SelectNodes;
+                }
+            }
+            else
+            {
+                if (isInsideAtLeastOneNode)
+                {
+                    dragNodes.Add(this);
+                }
+            }
+
+            if (dragNodes.Count>0)
+            {
+                var min_x = dragNodes.Min(arg => arg.Position.X);
+                var min_y = dragNodes.Min(arg => arg.Position.Y);
+                var max_x = dragNodes.Max(arg => {
+                    FrameworkElement framework = arg.node.Element as FrameworkElement;
+                    return framework.ActualWidth + arg.Position.X;
+                });
+                var max_y = dragNodes.Max(arg => {
+                    FrameworkElement framework = arg.node.Element as FrameworkElement;
+                    return framework.ActualHeight + arg.Position.Y;
+                });
+                var rect = new Rect(min_x, min_y, max_x - min_x, max_y - min_y);
+
+                //collect target of expand groups.
+                var targetGroupNodes = groupNodes.Where(arg => rect.IntersectsWith(arg.GetInnerBoundingBox())).ToArray();
+                foreach (var targetGroupNode in targetGroupNodes)
+                {
+                    targetGroupNode.ExpandSize(rect);
+                    targetGroupNode.ChangeInnerColor(false);
+                }
+            }
         }
 
         private void mouseDown(object sender, MouseEventArgs args)
@@ -374,6 +444,5 @@ namespace NodeControl
             element.CaptureMouse();
             args.Handled = true;
         }
-
     }
 }
