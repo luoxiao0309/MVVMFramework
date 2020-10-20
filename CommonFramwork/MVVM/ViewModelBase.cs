@@ -136,6 +136,84 @@ namespace CommonFramework.MVVM
             }
         }
         #endregion
+
+
+        // Summary:
+        //     Notifies subscribers of the property change.
+        //
+        // Parameters:
+        //   oldValue:
+        //
+        //   newValue:
+        //
+        //   propertyName:
+        //
+        // Type parameters:
+        //   T:
+        protected virtual bool NotifyPropertyChanged<T>(ref T oldValue, T newValue, [CallerMemberName] string propertyName = null)
+        {
+            if (Equals(oldValue, newValue))
+                return false;
+
+            oldValue = newValue;
+
+            OnPropertyChanged(propertyName);
+            return true;
+        }
+
+        // Summary:
+        //     Notifies subscribers of the property change.
+        //
+        // Parameters:
+        //   oldValue:
+        //
+        //   newValue:
+        //
+        //   propertyName:
+        //
+        // Type parameters:
+        //   T:
+        protected virtual bool NotifyPropertyChanged<T>(ref T oldValue, T newValue, Action onChanged, [CallerMemberName] string propertyName = null)
+        {
+            if (Equals(oldValue, newValue))
+                return false;
+
+            oldValue = newValue;
+
+            onChanged?.Invoke();
+
+            OnPropertyChanged(propertyName);
+            return true;
+        }
+
+        // Summary:
+        //     Notifies subscribers of the property change.
+        //
+        // Parameters:
+        //   oldValue:
+        //
+        //   newValue:
+        //
+        //   propertyName:
+        //
+        // Type parameters:
+        //   T:
+        protected virtual bool NotifyPropertyChanged<T>(ref T oldValue, T newValue, Action<T> onChanging, Action onChanged, [CallerMemberName] string propertyName = null)
+        {
+            if (Equals(oldValue, newValue))
+                return false;
+
+            if (oldValue != null)
+                onChanging(oldValue);
+
+            oldValue = newValue;
+
+            onChanged?.Invoke();
+
+            OnPropertyChanged(propertyName);
+            return true;
+        }
+
     }
 
     public static class NotifyPropertyChangedEx

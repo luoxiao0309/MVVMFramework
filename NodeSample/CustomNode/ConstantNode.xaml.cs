@@ -192,14 +192,14 @@ namespace NodeSample
         public void SetSelected(bool selected)
         {
             IsSelected = selected;
-            if (selected)
-            {
-                this.Background = Brushes.Aqua;
-            }
-            else
-            {
-                this.Background = Brushes.Transparent;
-            }
+            //if (selected)
+            //{
+            //    ContantNodeBorder.BorderBrush = Brushes.Aqua;
+            //}
+            //else
+            //{
+            //    ContantNodeBorder.BorderBrush = Brushes.Transparent;
+            //}
         }
     }
 }
